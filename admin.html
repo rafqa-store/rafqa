@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rafqa Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-wrapper {
+      padding: 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+      min-height: 100vh;
+      overflow: visible;
+    }
+    .admin-form {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.07);
+      margin-bottom: 1.5rem;
+    }
+    .admin-form h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    .admin-form label {
+      display: block;
+      margin-bottom: 0.8rem;
+      font-size: 0.9rem;
+    }
+    .admin-form input,
+    .admin-form textarea,
+    .admin-form select {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      font-family: inherit;
+      margin-top: 0.25rem;
+      box-sizing: border-box;
+    }
+    /* تنسيق زر الحفظ لكي يظهر ويعمل بشكل صحيح */
+    .primary-btn {
+      width: 100%;
+      background-color: #6366f1; /* لون بنفسجي جذاب يناسب لوحتك */
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.2s;
+    }
+    .primary-btn:hover {
+      background-color: #4f46e5;
+    }
+    .games-list {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.07);
+    }
+    .games-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 0.9rem;
+    }
+    .games-list-item:last-child {
+      border-bottom: none;
+    }
+    .danger-btn {
+      border: none;
+      background: #ef4444;
+      color: #fff;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-wrapper">
+    <h1>لوحة تحكم Rafqa</h1>
+    <p style="font-size:0.9rem;color:#6b7280; margin-bottom: 1.5rem;">تأكدي أنك مسجلة دخول بحساب الأدمن في Firebase.</p>
+
+    <div class="admin-form">
+      <h2>إضافة لعبة جديدة</h2>
+      <form id="addGameForm">
+        <label>
+          اسم اللعبة
+          <input type="text" id="gameName" required />
+        </label>
+        <label>
+          التصنيف
+          <select id="gameCategory" required>
+            <option value="eid">ألعاب العيد</option>
+            <option value="brain">ألعاب الذكاء</option>
+            <option value="summer">ألعاب الذكاء الاصطناعي</option>
+            <option value="edu">ألعاب تعليمية</option>
+          </select>
+        </label>
+        <label>
+          السعر (ر.س)
+          <input type="number" id="gamePrice" step="0.01" required />
+        </label>
+        <label>
+          الوصف
+          <textarea id="gameDescription" rows="3" required></textarea>
+        </label>
+        <label>
+          صورة اللعبة
+          <input type="file" id="gameImage" accept="image/*" required />
+        </label>
+        
+        <button type="submit" class="primary-btn">حفظ اللعبة</button>
+      </form> </div>
+
+    <div class="games-list">
+      <h2>الألعاب الحالية</h2>
+      <div id="adminGamesList"></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+  <script src="firebase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
