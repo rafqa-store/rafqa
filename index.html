@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="header">
@@ -153,7 +153,7 @@
       <h3>إنشاء حساب</h3>
       <form id="registerForm">
         <label>
-          السم
+          الاسم
           <input type="text" id="registerName" required />
         </label>
         <label>
@@ -176,28 +176,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyCi91hjNyQyMqP6E6jLjdOjOSmx2yWSNFU",
-      authDomain: "rafqa-bc5f4.firebaseapp.com",
-      databaseURL: "https://rafqa-bc5f4-default-rtdb.firebaseio.com",
-      projectId: "rafqa-bc5f4",
-      storageBucket: "rafqa-bc5f4.firebasestorage.app",
-      messagingSenderId: "61389146599",
-      appId: "1:61389146599:web:61bbadf915bf2dbe7e9a56",
-      measurementId: "G-S8CG0BGJNX"
-    };
-
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-
-    window.db = firebase.firestore();
-    window.rtdb = firebase.database();
-    window.auth = firebase.auth();
-  </script>
-
-<script src="firebase-config.js"></script>
-<script src="script.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
