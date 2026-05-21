@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
- <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=101">
 </head>
 <body>
   <header class="header">
@@ -16,9 +16,7 @@
     </div>
 
     <div class="header-actions">
-      <button class="icon-btn" id="searchToggle" aria-label="Search">
-        🔍
-      </button>
+      <button class="icon-btn" id="searchToggle" aria-label="Search">🔍</button>
       <button class="icon-btn" id="cartToggle" aria-label="Cart">
         🛒 <span class="cart-count" id="cartCount">0</span>
       </button>
@@ -74,8 +72,7 @@
       <h2>الألعاب التفاعلية</h2>
       <span id="gamesCount"></span>
     </div>
-    <div class="games-grid" id="gamesGrid">
-    </div>
+    <div class="games-grid" id="gamesGrid"></div>
   </main>
 
   <div class="modal-overlay hidden" id="gameModal">
@@ -85,10 +82,10 @@
         <img id="modalImage" alt="" />
         <div class="modal-info">
           <h3 id="modalTitle"></h3>
-          <p id="modalCategory"></p>
-          <p id="modalDescription"></p>
+          <p id="modalCategory" style="color: var(--primary); font-weight: 600;"></p>
+          <p id="modalDescription" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 5px;"></p>
           <p class="modal-price" id="modalPrice"></p>
-          <button class="primary-btn" id="modalAddToCart">إضافة إلى السلة</button>
+          <button class="primary-btn" id="modalAddToCart" style="width: 100%; margin-top: 10px;">إضافة إلى السلة</button>
         </div>
       </div>
     </div>
@@ -99,24 +96,22 @@
       <h3>سلة المشتريات</h3>
       <button class="close-modal" data-close="cartPanel">✕</button>
     </div>
-    <div class="cart-items" id="cartItems">
-    </div>
+    <div class="cart-items" id="cartItems"></div>
     <div class="cart-footer">
       <div class="cart-total">
-        الإجمالي: <span id="cartTotal">0.00</span> ر.س
+        <span>الإجمالي:</span>
+        <span><span id="cartTotal">0.00</span> ر.س</span>
       </div>
-      <button class="primary-btn" id="checkoutToggle">إتمام الشراء</button>
+      <button class="primary-btn" id="checkoutToggle" style="width: 100%;">إتمام الشراء</button>
     </div>
   </aside>
 
   <section class="checkout hidden" id="checkoutSection">
     <div class="checkout-inner">
       <h2>إتمام الشراء</h2>
-      <p>سيتم إرسال رابط تحميل الألعاب إلى بريدك بعد الدفع.</p>
-      <p class="checkout-note">
-        * يمكنك لاحقاً ربط هذه الصفحة ببوابة دفع (PayTabs / HyperPay / Stripe).
-      </p>
-      <button class="secondary-btn" id="closeCheckout">إغلاق</button>
+      <p style="margin: 10px 0; color: var(--text-muted);">سيتم إرسال رابط تحميل الألعاب إلى بريدك بعد الدفع.</p>
+      <p class="checkout-note">* يمكنك لاحقاً ربط هذه الصفحة ببوابة دفع (PayTabs / HyperPay / Stripe).</p>
+      <button class="secondary-btn" id="closeCheckout" style="margin-top: 15px;">إغلاق</button>
     </div>
   </section>
 
@@ -133,14 +128,14 @@
           كلمة المرور
           <input type="password" id="loginPassword" required />
         </label>
-        <button type="submit" class="primary-btn">دخول</button>
+        <button type="submit" class="primary-btn" style="margin-top: 5px;">دخول</button>
       </form>
-      <button id="googleLogin" class="secondary-btn" style="margin-top:10px;">
-        تسجيل الدخول بواسطة Google
+      <button id="googleLogin" class="secondary-btn" style="margin-top:10px; width:100%; display:flex; align-items:center; justify-content:center; gap:8px;">
+        <i class="fab fa-google" style="color: #db4437;"></i> تسجيل الدخول بواسطة Google
       </button>
-      <p class="login-note">
+      <p class="login-note" style="text-align: center;">
         ليس لديك حساب؟
-        <button id="openRegister" style="background:none;border:none;color:#5b5bd6;cursor:pointer;">
+        <button id="openRegister" style="background:none;border:none;color:var(--primary);cursor:pointer;font-weight:700;">
           إنشاء حساب
         </button>
       </p>
@@ -164,9 +159,9 @@
           كلمة المرور
           <input type="password" id="registerPassword" required />
         </label>
-        <button type="submit" class="primary-btn">إنشاء حساب</button>
+        <button type="submit" class="primary-btn" style="margin-top: 5px;">إنشاء حساب</button>
       </form>
-      <p class="login-note">* يتم حفظ حسابك في Firebase (حقيقي).</p>
+      <p class="login-note" style="text-align: center;">* يتم حفظ حسابك في Firebase (حقيقي).</p>
     </div>
   </div>
 
