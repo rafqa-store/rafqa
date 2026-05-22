@@ -267,14 +267,25 @@ if (cartToggle && cartPanel) {
   });
 }
 
+// 🛒 --- ربط زر إتمام الشراء ببوابة دفع Stripe ---
 if (checkoutToggle) {
   checkoutToggle.addEventListener("click", () => {
+    // 1. التحقق أولاً من تسجيل الدخول لحفظ بيانات الطلب وحماية الموقع
     if (!currentUser) {
       alert("الرجاء تسجيل الدخول أولاً لإتمام الطلب.");
       openModal(loginModal);
       return;
     }
-    openModal(checkoutSection);
+
+    // 2. التحقق من أن السلة تحتوي على منتجات
+    if (cart.length === 0) {
+      alert("سلتك فارغة حالياً، يرجى إضافة لعبة أولاً.");
+      return;
+    }
+
+    // 3. التوجيه المباشر إلى رابط الدفع التجريبي الذي قمتِ بإنشائه
+    alert("سيتم توجيهك الآن إلى صفحة الدفع الآمنة لإتمام الشراء.. 🎉");
+    window.location.href = "https://buy.stripe.com/test_4gMdR229ve1TcgDbuZcfK00";
   });
 }
 
