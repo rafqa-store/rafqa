@@ -181,32 +181,82 @@ body {
   border-color: var(--primary);
 }
 
-/* Hero */
-.hero {
-  padding: 2.5rem 1.25rem 2rem;
-  display: flex;
-  justify-content: center;
+/* --- تنسيق البانر الترحيبي الجديد --- */
+.welcome-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #FFFDF9 0%, #FFF5EF 100%); /* خلفية دافئة متناسقة مع الهوية البرتقالية */
+    border-radius: 24px;
+    padding: 60px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(255, 130, 58, 0.05);
+    margin-bottom: 40px;
 }
 
-.hero-content {
-  max-width: 900px;
-  width: 100%;
-  background: linear-gradient(135deg, #fff3e6 0%, #ffffff 100%);
-  border-radius: 24px;
-  padding: 2.5rem 1.5rem;
-  box-shadow: var(--shadow-soft);
-  text-align: center;
+.banner-content {
+    max-width: 55%;
+    z-index: 2;
 }
 
-.hero-content h1 {
-  margin: 0 0 0.5rem;
-  font-size: 1.9rem;
-  font-weight: 700;
+/* صندوق الألعاب التفاعلي */
+.banner-gaming-assets {
+    position: relative;
+    width: 40%;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
 }
 
-.hero-content p {
-  margin: 0 0 1.5rem;
-  color: var(--text-muted);
+/* التنسيق العام للأيقونات العائمة */
+.game-asset {
+    position: absolute;
+    color: #FF823A; /* اللون البرتقالي المميز لرفقة */
+    opacity: 0.85;
+    filter: drop-shadow(0 4px 10px rgba(255, 130, 58, 0.2));
+    animation: floatAnimation 4s ease-in-out infinite;
+}
+
+/* توزيع الأيقونات بأحجام وأماكن مختلفة لتصميم متوازن */
+.icon-gamepad { font-size: 80px; top: 20%; left: 30%; animation-delay: 0s; color: #FF823A; }
+.icon-puzzle  { font-size: 45px; top: 10%; right: 15%; animation-delay: 1s; color: #ffb082; }
+.icon-dice    { font-size: 50px; bottom: 15%; left: 15%; animation-delay: 1.5s; color: #ffa166; }
+.icon-trophy  { font-size: 55px; bottom: 10%; right: 25%; animation-delay: 0.5s; color: #FF823A; }
+.icon-star    { font-size: 30px; top: 60%; left: 50%; animation-delay: 2s; color: #ffdcc7; }
+
+/* تأثير الحركة العائمة السلسة (Floating Effect) */
+@keyframes floatAnimation {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-15px) rotate(8deg);
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+}
+
+/* لضمان تناسق التصميم على الهواتف وال شاشات الصغيرة */
+@media (max-width: 768px) {
+    .welcome-banner {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+    }
+    .banner-content {
+        max-width: 100%;
+        margin-bottom: 30px;
+    }
+    .banner-gaming-assets {
+        width: 100%;
+        height: 150px;
+    }
+    .icon-gamepad { font-size: 55px; }
+    .icon-puzzle, .icon-dice, .icon-trophy { font-size: 30px; }
 }
 
 .primary-btn,
