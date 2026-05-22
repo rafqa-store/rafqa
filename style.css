@@ -181,86 +181,68 @@ body {
   border-color: var(--primary);
 }
 
-/* --- تنسيق البانر الترحيبي الجديد --- */
+/* --- 🎮 تنسيق البانر الترحيبي الجديد والمطور 🎮 --- */
 .welcome-banner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, #FFFDF9 0%, #FFF5EF 100%); /* خلفية دافئة متناسقة مع الهوية البرتقالية */
-    border-radius: 24px;
-    padding: 60px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(255, 130, 58, 0.05);
-    margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #FFFDF9 0%, #FFF5EF 100%); /* خلفية دافئة متناسقة مع الهوية البرتقالية */
+  border-radius: 24px;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(255, 130, 58, 0.05);
+  margin-bottom: 40px;
 }
 
 .banner-content {
-    max-width: 55%;
-    z-index: 2;
+  max-width: 55%;
+  z-index: 2;
 }
 
 /* صندوق الألعاب التفاعلي */
 .banner-gaming-assets {
-    position: relative;
-    width: 40%;
-    height: 250px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
+  position: relative;
+  width: 40%;
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
 }
 
 /* التنسيق العام للأيقونات العائمة */
 .game-asset {
-    position: absolute;
-    color: #FF823A; /* اللون البرتقالي المميز لرفقة */
-    opacity: 0.85;
-    filter: drop-shadow(0 4px 10px rgba(255, 130, 58, 0.2));
-    animation: floatAnimation 4s ease-in-out infinite;
+  position: absolute;
+  color: #ff7a00; /* تم ربطه بمتغير الهوية البرتقالية الأساسي */
+  opacity: 0.85;
+  filter: drop-shadow(0 4px 10px rgba(255, 122, 0, 0.2));
+  animation: floatAnimation 4s ease-in-out infinite;
 }
 
 /* توزيع الأيقونات بأحجام وأماكن مختلفة لتصميم متوازن */
-.icon-gamepad { font-size: 80px; top: 20%; left: 30%; animation-delay: 0s; color: #FF823A; }
-.icon-puzzle  { font-size: 45px; top: 10%; right: 15%; animation-delay: 1s; color: #ffb082; }
+.icon-gamepad { font-size: 80px; top: 20%; left: 30%; animation-delay: 0s; color: var(--primary); }
+.icon-puzzle  { font-size: 45px; top: 10%; right: 15%; animation-delay: 1s; color: var(--accent); }
 .icon-dice    { font-size: 50px; bottom: 15%; left: 15%; animation-delay: 1.5s; color: #ffa166; }
-.icon-trophy  { font-size: 55px; bottom: 10%; right: 25%; animation-delay: 0.5s; color: #FF823A; }
+.icon-trophy  { font-size: 55px; bottom: 10%; right: 25%; animation-delay: 0.5s; color: var(--primary); }
 .icon-star    { font-size: 30px; top: 60%; left: 50%; animation-delay: 2s; color: #ffdcc7; }
 
 /* تأثير الحركة العائمة السلسة (Floating Effect) */
 @keyframes floatAnimation {
-    0% {
-        transform: translateY(0px) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-15px) rotate(8deg);
-    }
-    100% {
-        transform: translateY(0px) rotate(0deg);
-    }
-}
-
-/* لضمان تناسق التصميم على الهواتف وال شاشات الصغيرة */
-@media (max-width: 768px) {
-    .welcome-banner {
-        flex-direction: column;
-        text-align: center;
-        padding: 40px 20px;
-    }
-    .banner-content {
-        max-width: 100%;
-        margin-bottom: 30px;
-    }
-    .banner-gaming-assets {
-        width: 100%;
-        height: 150px;
-    }
-    .icon-gamepad { font-size: 55px; }
-    .icon-puzzle, .icon-dice, .icon-trophy { font-size: 30px; }
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(8deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
 }
 
 .primary-btn,
-.secondary-btn {
+.secondary-btn,
+.banner-btn {
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -271,13 +253,13 @@ body {
   transition: all 0.2s ease;
 }
 
-.primary-btn {
+.primary-btn, .banner-btn {
   background: var(--primary);
   color: #fff;
   box-shadow: 0 8px 20px rgba(255, 122, 0, 0.25);
 }
 
-.primary-btn:hover {
+.primary-btn:hover, .banner-btn:hover {
   transform: translateY(-1px);
   background: #e06b00;
   box-shadow: 0 12px 24px rgba(255, 122, 0, 0.35);
@@ -511,7 +493,7 @@ body {
   color: var(--primary);
 }
 
-/* Cart panel FIX */
+/* Cart panel */
 .cart-panel {
   position: fixed;
   top: 0;
@@ -648,15 +630,6 @@ body {
 
 /* Media Queries */
 @media (min-width: 768px) {
-  .hero-content {
-    padding: 3rem 2.5rem;
-    text-align: right;
-  }
-
-  .hero-content h1 {
-    font-size: 2.2rem;
-  }
-
   .category-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -675,8 +648,27 @@ body {
   }
 }
 
+/* لضمان تناسق تصميم البانر وال ألعاب على الشاشات الصغيرة */
+@media (max-width: 768px) {
+  .welcome-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .banner-content {
+    max-width: 100%;
+    margin-bottom: 30px;
+  }
+  .banner-gaming-assets {
+    width: 100%;
+    height: 150px;
+  }
+  .icon-gamepad { font-size: 55px; }
+  .icon-puzzle, .icon-dice, .icon-trophy { font-size: 30px; }
+}
+
 /* ==========================================================================
-   🛠️ التعديل الجديد المضاف لإصلاح شكل وتداخل نموذج الدخول / التسجيل
+   🛠️ تنسيق نموذج الدخول / التسجيل
    ========================================================================== */
 .modal form {
   display: flex;
