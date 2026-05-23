@@ -58,7 +58,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;     /* 🪄 السطر السحري الذي يقص الشعار تلقائياً على شكل دائرة ويمنع تمدده */
+  overflow: hidden;       /* 🪄 السطر السحري الذي يقص الشعار تلقائياً على شكل دائرة ويمنع تمدده */
   flex-shrink: 0;       /* يمنع انضغاط الدائرة نهائياً */
   box-shadow: 0 4px 10px rgba(255, 122, 0, 0.2); /* لمسة جمالية دافئة */
 }
@@ -622,6 +622,20 @@ body {
   font-size: 1rem;
 }
 
+/* 🚨 صندوق رسائل التنبيه والخطأ باللون الأحمر المحدث */
+.error-text {
+  color: #dc2626;
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: right;
+  margin-top: 8px;
+  width: 100%;
+}
+
 /* Checkout Section */
 .checkout {
   position: fixed;
@@ -702,7 +716,7 @@ body {
 }
 
 /* ==========================================================================
-   🛠️ تنسيق نموذج الدخول / التسجيل
+   🛠️ تنسيق نموذج الدخول / التسجيل برقم الجوال
    ========================================================================== */
 .modal form {
   display: flex;
@@ -727,8 +741,8 @@ body {
   border: 1px solid rgba(148, 163, 184, 0.4);
   font-family: inherit;
   font-size: 0.95rem;
-  direction: ltr; /* لتسهيل كتابة البريد الإلكتروني والباسورد بشكل صحيح */
-  text-align: left;
+  direction: ltr; /* لتسهيل قراءة أرقام الهواتف والأكواد بشكل صحيح */
+  text-align: right; /* المحاذاة لليمين لتناسب اللغة العربية */
   outline: none;
   width: 100%;
   background-color: var(--card-bg);
