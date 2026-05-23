@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css?v=3.0">
+  <link rel="stylesheet" href="style.css?v=4.0">
   <script src="https://js.stripe.com"></script>
 </head>
 <body>
@@ -40,7 +40,7 @@
     <input type="text" id="searchInput" placeholder="ابحث عن لعبة..." />
   </section>
 
- <section class="welcome-banner">
+  <section class="welcome-banner">
     <div class="banner-content">
         <h1>مرحباً بك في Rafqa</h1>
         <p>عروض تفاعلية لألعاب PowerPoint تجعل التعلم واللعب أكثر متعة.</p>
@@ -55,6 +55,7 @@
         <div class="game-asset icon-star"><i class="fas fa-star"></i></div>
     </div>
   </section>
+
   <section class="categories">
     <h2>التصنيفات الرئيسية</h2>
     <div class="category-grid">
@@ -119,7 +120,7 @@
   <section class="checkout hidden" id="checkoutSection">
     <div class="checkout-inner">
       <h2>إتمام الشراء</h2>
-      <p style="margin: 10px 0; color: var(--text-muted);">سيتم إرسال رابط تحميل الألعاب إلى بريدك بعد الدفع.</p>
+      <p style="margin: 10px 0; color: var(--text-muted);">سيتم إرسال رابط تحميل الألعاب بعد تأكيد الدفع.</p>
       <p class="checkout-note">* يمكنك لاحقاً ربط هذه الصفحة ببوابة دفع (PayTabs / HyperPay / Stripe).</p>
       <button class="secondary-btn" id="closeCheckout" style="margin-top: 15px;">إغلاق</button>
     </div>
@@ -131,22 +132,24 @@
       <h3>تسجيل الدخول</h3>
       <form id="loginForm">
         <label>
-          البريد الإلكتروني
-          <input type="email" id="loginEmail" required />
+          رقم الجوال
+          <input type="tel" id="loginPhone" placeholder="05xxxxxxxx" required style="direction: ltr; text-align: right;" />
         </label>
-        <label>
-          كلمة المرور
-          <input type="password" id="loginPassword" required />
+        
+        <label id="loginOtpLabel" class="hidden" style="margin-top: 10px;">
+          أدخل كود التحقق (SMS)
+          <input type="text" id="loginOtp" placeholder="XXXX" style="direction: ltr; text-align: center;" />
         </label>
-        <button type="submit" class="primary-btn" style="margin-top: 5px;">دخول</button>
+
+        <div id="loginErrorMsg" class="error-text hidden" style="color: #dc2626; background: #fef2f2; border: 1px solid #fca5a5; padding: 8px; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; text-align: right;"></div>
+        
+        <button type="submit" id="authSubmitBtn" class="primary-btn" style="margin-top: 15px; width: 100%;">إرسال كود التحقق</button>
       </form>
-      <button id="googleLogin" class="secondary-btn" style="margin-top:10px; width:100%; display:flex; align-items:center; justify-content:center; gap:8px;">
-        <i class="fab fa-google" style="color: #db4437;"></i> تسجيل الدخول بواسطة Google
-      </button>
-      <p class="login-note" style="text-align: center;">
+      
+      <p class="login-note" style="text-align: center; margin-top: 15px;">
         ليس لديك حساب؟
-        <button id="openRegister" style="background:none;border:none;color:var(--primary);cursor:pointer;font-weight:700;">
-          إنشاء حساب
+        <button id="openRegister" style="background:none; border:none; color:var(--primary); cursor:pointer; font-weight:700; font-family:inherit;">
+          إنشاء حساب جديد
         </button>
       </p>
     </div>
@@ -155,23 +158,22 @@
   <div class="modal-overlay hidden" id="registerModal">
     <div class="modal login-modal">
       <button class="close-modal" data-close="registerModal">✕</button>
-      <h3>إنشاء حساب</h3>
+      <h3>إنشاء حساب جديد</h3>
       <form id="registerForm">
         <label>
-          الاسم
-          <input type="text" id="registerName" required />
+          الاسم كاملاً
+          <input type="text" id="registerName" placeholder="اكتب اسمك الكريم" required />
         </label>
-        <label>
-          البريد الإلكتروني
-          <input type="email" id="registerEmail" required />
+        <label style="margin-top: 10px;">
+          رقم الجوال
+          <input type="tel" id="registerPhone" placeholder="05xxxxxxxx" required style="direction: ltr; text-align: right;" />
         </label>
-        <label>
-          كلمة المرور
-          <input type="password" id="registerPassword" required />
-        </label>
-        <button type="submit" class="primary-btn" style="margin-top: 5px;">إنشاء حساب</button>
+
+        <div id="registerErrorMsg" class="error-text hidden" style="color: #dc2626; background: #fef2f2; border: 1px solid #fca5a5; padding: 8px; border-radius: 8px; font-size: 0.85rem; margin-top: 10px; text-align: right;"></div>
+        
+        <button type="submit" class="primary-btn" style="margin-top: 15px; width: 100%;">تأكيد وإنشاء الحساب</button>
       </form>
-      <p class="login-note" style="text-align: center;">* يتم حفظ حسابك في Firebase (حقيقي).</p>
+      <p class="login-note" style="text-align: center; margin-top: 15px;">* يتم توثيق الحساب عبر رقم الجوال في Firebase.</p>
     </div>
   </div>
 
@@ -182,6 +184,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
   <script src="firebase-config.js"></script>
-  <script src="script.js?v=201"></script>
+  <script src="script.js?v=202"></script>
 </body>
 </html>
