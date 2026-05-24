@@ -112,17 +112,6 @@ function resetAuthForms() {
   if (registerErrorMsg) registerErrorMsg.classList.add("hidden");
 }
 
-// ✨ دالة مطورة لجلب قاعدة البيانات متوافقة مع روابط v10 الجديدة بدون compat
-function firebaseGetDatabase() {
-  if (typeof firebase !== "undefined" && firebase.database) {
-    return firebase.database();
-  }
-  if (typeof window.firebase !== "undefined" && window.firebase.database) {
-    return window.firebase.database();
-  }
-  return window.rtdb || (typeof rtdb !== "undefined" ? rtdb : null);
-}
-
 // --- Render functions ---
 function renderGames(list) {
   if (!gamesGrid) return;
@@ -135,7 +124,7 @@ function renderGames(list) {
   }
 
   list.forEach((game) => {
-    // 🪄 السطر السحري: تأمين قراءة الأسماء والصور سواءً رُفعت بالنظام القديم أو الجديد لـ لوحة التحكم
+    // تأمين قراءة الأسماء والصور سواءً رُفعت بالنظام القديم أو الجديد لـ لوحة التحكم
     const gameName = game.name || game.title || "لعبة تفاعلية";
     const gameImg = game.image || game.imageUrl || 'placeholder.png';
 
@@ -207,32 +196,46 @@ function renderCart() {
   if (cartCountEl) cartCountEl.textContent = cart.length;
 }
 
-// --- Firebase Data Fetching المحدث بالتوافق الكامل ---
+// 🔐 --- دالة جلب الألعاب المصلحة والمضمونة للربط مع Firebase ---
 async function loadGames() {
-  const currentRtdb = firebaseGetDatabase();
-  
-  if (currentRtdb) {
-    const gamesRef = typeof currentRtdb.ref === "function" ? currentRtdb.ref("games") : currentRtdb;
-    
-    gamesRef.on("value", (snapshot) => {
-      games = [];
-      if (snapshot.exists()) {
-        snapshot.forEach((childSnapshot) => {
-          games.push({
-            id: childSnapshot.key,
-            ...childSnapshot.val()
+  try {
+    let gamesRef;
+
+    // 1. التحقق من وجود نظام Firebase v9/v10 (الكائنات المعولمة المباشرة)
+    if (typeof firebase !== "undefined" && firebase.database) {
+      gamesRef = firebase.database().ref("games");
+    } else if (typeof window.firebase !== "undefined" && window.firebase.database) {
+      gamesRef = window.firebase.database().ref("games");
+    } else if (typeof db !== "undefined" && typeof db.ref === "function") {
+      gamesRef = db.ref("games");
+    } else if (typeof rtdb !== "undefined") {
+      // إذا كان مرجع قاعدة البيانات ممرر مباشرة كـ rtdb
+      gamesRef = typeof rtdb.ref === "function" ? rtdb.ref("games") : rtdb;
+    }
+
+    if (gamesRef && typeof gamesRef.on === "function") {
+      gamesRef.on("value", (snapshot) => {
+        games = [];
+        if (snapshot.exists()) {
+          snapshot.forEach((childSnapshot) => {
+            games.push({
+              id: childSnapshot.key,
+              ...childSnapshot.val()
+            });
           });
-        });
-        games.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      }
-      filteredGames = [...games];
-      renderGames(filteredGames);
-      renderCart();
-    }, (error) => {
-      console.error("خطأ أثناء جلب الألعاب:", error);
-    });
-  } else {
-    console.warn("جاري انتظار استقرار اتصال الفايربيس لقراءة الألعاب...");
+          games.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        }
+        filteredGames = [...games];
+        renderGames(filteredGames);
+        renderCart();
+      }, (error) => {
+        console.error("خطأ أثناء جلب الألعاب من الفايربيس:", error);
+      });
+    } else {
+      console.error("خطأ: لم يتم العثور على مرجع اتصال صالح لـ Firebase Realtime Database.");
+    }
+  } catch (err) {
+    console.error("حدث خطأ غير متوقع في دالة الاتصال:", err);
   }
 }
 
