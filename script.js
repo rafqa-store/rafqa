@@ -27,7 +27,6 @@ const loginToggle = document.getElementById("loginToggle");
 const loginModal = document.getElementById("loginModal");
 const loginForm = document.getElementById("loginForm");
 
-// العناصر الجديدة والمحدثة للنظام الشامل (البريد، كلمة المرور، الجوال)
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
 const loginErrorMsg = document.getElementById("loginErrorMsg");
@@ -44,7 +43,6 @@ const registerErrorMsg = document.getElementById("registerErrorMsg");
 const openLogin = document.getElementById("openLogin");
 const googleLogin = document.getElementById("googleLogin");
 
-// عناصر القائمة المنسدلة
 const userDropdown = document.getElementById("userDropdown");
 const btnLogout = document.getElementById("btnLogout");
 const btnMyOrders = document.getElementById("btnMyOrders");
@@ -56,7 +54,7 @@ let selectedGame = null;
 let cart = [];
 let currentUser = null;
 
-// ✨ دالة ذكية ومحدثة للحصول على خدمات Firebase Auth المتوافقة مع الإصدار الجديد
+// ✨ دالة المرجعية الأصلية والمستقرة للـ Auth
 function getFirebaseAuth() {
   if (typeof firebase !== "undefined" && firebase.auth) {
     return firebase.auth();
@@ -67,33 +65,32 @@ function getFirebaseAuth() {
   return window.auth || null;
 }
 
+// ✨ دالة المرجعية الأصلية والمستقرة لقاعدة البيانات (تم إعادتها للنسخة التي لا تسبب أخطاء)
+function firebaseGetDatabase() {
+  if (typeof firebase !== "undefined" && firebase.database) {
+    return firebase.database();
+  }
+  if (typeof window.firebase !== "undefined" && window.firebase.database) {
+    return window.firebase.database();
+  }
+  return window.rtdb || (typeof rtdb !== "undefined" ? rtdb : null);
+}
+
 // --- Helpers ---
 function mapCategory(cat) {
   switch (cat) {
-    case "eid":
-      return "ألعاب العيد";
-    case "brain":
-      return "ألعاب الذكاء";
-    case "summer":
-      return "ألعاب الذكاء الاصطناعي";
-    case "edu":
-      return "ألعاب تعليمية";
-    case "group":
-      return "ألعاب جماعية";
-    case "kids":
-      return "ألعاب للأطفال";
-    default:
-      return "ألعاب تفاعلية";
+    case "eid": return "ألعاب العيد";
+    case "brain": return "ألعاب الذكاء";
+    case "summer": return "ألعاب الذكاء الاصطناعي";
+    case "edu": return "ألعاب تعليمية";
+    case "group": return "ألعاب جماعية";
+    case "kids": return "ألعاب للأطفال";
+    default: return "ألعاب تفاعلية";
   }
 }
 
-function openModal(el) {
-  if (el) el.classList.remove("hidden");
-}
-
-function closeModal(el) {
-  if (el) el.classList.add("hidden");
-}
+function openModal(el) { if (el) el.classList.remove("hidden"); }
+function closeModal(el) { if (el) el.classList.add("hidden"); }
 
 function updateHeaderUser(user) {
   if (!loginToggle) return;
@@ -124,7 +121,7 @@ function renderGames(list) {
   }
 
   list.forEach((game) => {
-    // تأمين قراءة الأسماء والصور سواءً رُفعت بالنظام القديم أو الجديد لـ لوحة التحكم
+    // 🪄 الأسطر الذكية لقراءة البيانات القديمة والجديدة دون مشاكل
     const gameName = game.name || game.title || "لعبة تفاعلية";
     const gameImg = game.image || game.imageUrl || 'placeholder.png';
 
@@ -147,7 +144,6 @@ function renderGames(list) {
         </div>
       </div>
     `;
-
     gamesGrid.appendChild(card);
   });
 
@@ -196,23 +192,13 @@ function renderCart() {
   if (cartCountEl) cartCountEl.textContent = cart.length;
 }
 
-// 🔐 --- دالة جلب الألعاب المصلحة والمضمونة للربط مع Firebase ---
+// --- Firebase Data Fetching (النسخة المستقرة الأصلية مع حماية البيانات) ---
 async function loadGames() {
-  try {
-    let gamesRef;
-
-    // 1. التحقق من وجود نظام Firebase v9/v10 (الكائنات المعولمة المباشرة)
-    if (typeof firebase !== "undefined" && firebase.database) {
-      gamesRef = firebase.database().ref("games");
-    } else if (typeof window.firebase !== "undefined" && window.firebase.database) {
-      gamesRef = window.firebase.database().ref("games");
-    } else if (typeof db !== "undefined" && typeof db.ref === "function") {
-      gamesRef = db.ref("games");
-    } else if (typeof rtdb !== "undefined") {
-      // إذا كان مرجع قاعدة البيانات ممرر مباشرة كـ rtdb
-      gamesRef = typeof rtdb.ref === "function" ? rtdb.ref("games") : rtdb;
-    }
-
+  const currentRtdb = firebaseGetDatabase();
+  
+  if (currentRtdb) {
+    const gamesRef = typeof currentRtdb.ref === "function" ? currentRtdb.ref("games") : currentRtdb;
+    
     if (gamesRef && typeof gamesRef.on === "function") {
       gamesRef.on("value", (snapshot) => {
         games = [];
@@ -229,13 +215,9 @@ async function loadGames() {
         renderGames(filteredGames);
         renderCart();
       }, (error) => {
-        console.error("خطأ أثناء جلب الألعاب من الفايربيس:", error);
+        console.error("خطأ أثناء جلب الألعاب:", error);
       });
-    } else {
-      console.error("خطأ: لم يتم العثور على مرجع اتصال صالح لـ Firebase Realtime Database.");
     }
-  } catch (err) {
-    console.error("حدث خطأ غير متوقع في دالة الاتصال:", err);
   }
 }
 
@@ -399,7 +381,7 @@ if (btnMyOrders) {
   });
 }
 
-// 🔐 --- تسجيل الدخول الذكي (رقم الجوال أو البريد الإلكتروني) ---
+// 🔐 --- تسجيل الدخول (رقم الجوال أو البريد الإلكتروني) ---
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -439,7 +421,7 @@ if (loginForm) {
   });
 }
 
-// 2. إنشاء حساب جديد شامل
+// 🔐 --- إنشاء حساب جديد ---
 if (registerForm) {
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -543,12 +525,10 @@ function initializeAppLogic() {
     });
   }
   
-  // استدعاء جلب الألعاب الآمن
   loadGames();
   renderCart();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  // نعطي مهلة ثانية واحدة كاملة ليتأكد المتصفح من ربط قاعدة البيانات الجديدة
   setTimeout(initializeAppLogic, 1000); 
 });
