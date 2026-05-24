@@ -56,17 +56,24 @@ let selectedGame = null;
 let cart = [];
 let currentUser = null;
 
-// دالة ذكية للحصول على خدمات Firebase Auth و Database بالإصدارين الحديث والقديم لضمان عدم توقف الموقع
+// ✨ دالة ذكية ومحدثة للحصول على خدمات Firebase Auth المتوافقة مع الإصدار الجديد
 function getFirebaseAuth() {
   if (typeof firebase !== "undefined" && firebase.auth) {
     return firebase.auth();
   }
+  if (typeof window.firebase !== "undefined" && window.firebase.auth) {
+    return window.firebase.auth();
+  }
   return window.auth || null;
 }
 
+// ✨ دالة مطورة لجلب قاعدة البيانات متوافقة مع روابط v10 الجديدة بدون compat
 function firebaseGetDatabase() {
   if (typeof firebase !== "undefined" && firebase.database) {
     return firebase.database();
+  }
+  if (typeof window.firebase !== "undefined" && window.firebase.database) {
+    return window.firebase.database();
   }
   return window.rtdb || (typeof rtdb !== "undefined" ? rtdb : null);
 }
@@ -91,17 +98,14 @@ function mapCategory(cat) {
   }
 }
 
-// فتح النوافذ المنبثقة
 function openModal(el) {
   if (el) el.classList.remove("hidden");
 }
 
-// إغلاق النوافذ المنبثقة
 function closeModal(el) {
   if (el) el.classList.add("hidden");
 }
 
-// تحديث الهيدر باسم المستخدم أو كلمة "حسابي" عند تسجيل الدخول
 function updateHeaderUser(user) {
   if (!loginToggle) return;
   if (user) {
@@ -112,7 +116,6 @@ function updateHeaderUser(user) {
   }
 }
 
-// إعادة تعيين الحقول وإخفاء رسائل الخطأ
 function resetAuthForms() {
   if (loginForm) loginForm.reset();
   if (registerForm) registerForm.reset();
@@ -125,6 +128,12 @@ function renderGames(list) {
   if (!gamesGrid) return;
   gamesGrid.innerHTML = "";
   
+  if (list.length === 0) {
+    gamesGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 20px;">لا توجد ألعاب معروضة حالياً.</p>`;
+    if (gamesCount) gamesCount.textContent = "0 لعبة";
+    return;
+  }
+
   list.forEach((game) => {
     const card = document.createElement("article");
     card.className = "game-card";
@@ -132,7 +141,7 @@ function renderGames(list) {
 
     card.innerHTML = `
       <div class="game-thumb">
-        <img src="${game.image}" alt="${game.name}">
+        <img src="${game.image || 'placeholder.png'}" alt="${game.name}">
       </div>
       <div class="game-body">
         <div class="game-title">${game.name}</div>
@@ -191,28 +200,35 @@ function renderCart() {
   if (cartCountEl) cartCountEl.textContent = cart.length;
 }
 
-// --- Firebase Data Fetching ---
+// --- Firebase Data Fetching المحدث بالتوافق الكامل ---
 async function loadGames() {
+  // نتحقق أولاً إذا كان الفايربيس متاحاً بالنظام الجديد أو القديم
   const currentRtdb = firebaseGetDatabase();
-  if (!currentRtdb) return;
   
-  currentRtdb.ref("games").on("value", (snapshot) => {
-    games = [];
-    if (snapshot.exists()) {
-      snapshot.forEach((childSnapshot) => {
-        games.push({
-          id: childSnapshot.key,
-          ...childSnapshot.val()
+  if (currentRtdb) {
+    // القراءة المتوافقة مع النظامين لضمان السحب السريع للألعاب دون انقطاع
+    const gamesRef = typeof currentRtdb.ref === "function" ? currentRtdb.ref("games") : currentRtdb;
+    
+    gamesRef.on("value", (snapshot) => {
+      games = [];
+      if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot) => {
+          games.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
+          });
         });
-      });
-      games.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-    }
-    filteredGames = [...games];
-    renderGames(filteredGames);
-    renderCart();
-  }, (error) => {
-    console.error("خطأ أثناء جلب الألعاب للموقع الأساسي:", error);
-  });
+        games.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      }
+      filteredGames = [...games];
+      renderGames(filteredGames);
+      renderCart();
+    }, (error) => {
+      console.error("خطأ أثناء جلب الألعاب:", error);
+    });
+  } else {
+    console.warn("جاري انتظار استقرار اتصال الفايربيس لقراءة الألعاب...");
+  }
 }
 
 // --- Event wiring ---
@@ -371,9 +387,7 @@ if (btnMyOrders) {
   });
 }
 
-// 🔐 --- ربط الـ Authentication الفعلي بـ Firebase المحدث ---
-
-// 1. تسجيل الدخول الذكي (رقم الجوال أو البريد الإلكتروني + كلمة المرور)
+// 🔐 --- تسجيل الدخول الذكي (رقم الجوال أو البريد الإلكتروني) ---
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -388,20 +402,16 @@ if (loginForm) {
       return;
     }
 
-    // 💡 التحقق الذكي: إذا كان المدخل يبدأ بـ 05 ويتكون من أرقام فقط، نعتبره رقم جوال ونقوم بتهيئته تلقائياً
     if (/^[0-9]+$/.test(inputVal) && inputVal.startsWith("05")) {
       inputVal = `${inputVal}@rafqa-phone.com`;
     }
 
     try {
       await currentAuth.signInWithEmailAndPassword(inputVal, passwordVal);
-      
       closeModal(loginModal);
       resetAuthForms();
-      
       const oldNotice = document.getElementById("cartAuthNotice");
       if (oldNotice) oldNotice.remove();
-      
       alert("مرحباً بعودتكِ مجدداً إلى Rafqa! 🎉");
     } catch (error) {
       console.error("خطأ تسجيل الدخول:", error);
@@ -417,7 +427,7 @@ if (loginForm) {
   });
 }
 
-// 2. إنشاء حساب جديد شامل (الاسم، البريد، الجوال، كلمة المرور)
+// 2. إنشاء حساب جديد شامل
 if (registerForm) {
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -431,7 +441,6 @@ if (registerForm) {
     const currentAuth = getFirebaseAuth();
     if (!currentAuth) return;
 
-    // التحقق من صحة رقم الجوال السعودي
     if (phoneVal.length < 10 || !phoneVal.startsWith("05")) {
       if (registerErrorMsg) {
         registerErrorMsg.textContent = "❌ يرجى إدخال رقم جوال سعودي صحيح مكون من 10 خانات ويبدأ بـ 05.";
@@ -440,7 +449,6 @@ if (registerForm) {
       return;
     }
 
-    // إذا لم تدخل المستخدمة بريداً إلكترونياً، ننشئ لها بريداً تلقائياً مربوطاً برقم جوالها للفايربيس
     if (!emailVal) {
       emailVal = `${phoneVal}@rafqa-phone.com`;
     }
@@ -456,13 +464,11 @@ if (registerForm) {
         });
       }
 
-      // تحديث فوري للحالة المحلية للـ Header والـ User بعد الحفظ مباشرة لتعمل فوراً
       currentUser = currentAuth.currentUser || user;
       updateHeaderUser(currentUser);
 
       closeModal(registerModal);
       resetAuthForms();
-      
       const oldNotice = document.getElementById("cartAuthNotice");
       if (oldNotice) oldNotice.remove();
 
@@ -483,7 +489,6 @@ if (registerForm) {
   });
 }
 
-// التبديل السلس بين النوافذ المنبثقة
 if (openRegister) {
   openRegister.addEventListener("click", (e) => {
     e.preventDefault();
@@ -526,15 +531,12 @@ function initializeAppLogic() {
     });
   }
   
-  try {
-    loadGames();
-  } catch (error) {
-    console.error("تعذر جلب الألعاب فوراً، جاري محاولة البناء الأساسي:", error);
-  }
-
+  // استدعاء جلب الألعاب الآمن
+  loadGames();
   renderCart();
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(initializeAppLogic, 500); // زيادة مهلة الانتظار لضمان استقرار قراءة الفايربيس الجديد
+  // نعطي مهلة ثانية واحدة كاملة ليتأكد المتصفح من ربط قاعدة البيانات الجديدة
+  setTimeout(initializeAppLogic, 1000); 
 });
