@@ -775,3 +775,52 @@ body {
   background: #e06b00;
   transform: translateY(-1px);
 }
+/* 🌟 إعادة ضبط النوافذ لتظهر عائمة في منتصف الشاشة فوق كل شيء */
+.modal {
+  position: fixed;            /* يجعل النافذة ثابته فوق محتوى الموقع بالكامل 📌 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* خلفية ضبابية داكنة لتركيز الانتباه */
+  display: flex;
+  align-items: center;        /* محاذاة عمودية في المنتصف */
+  justify-content: center;     /* محاذاة أفقية في المنتصف */
+  z-index: 9999;              /* رقم فلكي لضمان ظهورها فوق أي عنصر آخر بالموقع 🚀 */
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* 🎨 تنسيق محتوى النافذة ليكون مرتباً ومرناً ولا يسبب أي تمطط */
+.modal-content {
+  background-color: #ffffff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;           /* تمرير داخلي ناعم لو زادت الحقول */
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  animation: modalAppear 0.3s ease-out; /* حركة دخول ناعمة */
+}
+
+/* 🙈 إخفاء النافذة تماماً عندما تحمل كلاس hidden */
+.modal.hidden {
+  display: none !important;
+}
+
+/* ✨ تأثير دخول انسيابي للنافذة */
+@keyframes modalAppear {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
