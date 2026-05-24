@@ -57,7 +57,7 @@ body {
   width: 45px;          /* حجم مثالي ومتناسق */
   height: 45px;
   border-radius: 50%;
-  background: var(--primary); /* اللون البرتقالي المحيط */
+  background: var(--primary); /* اللون البرتقالية المحيط */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -368,10 +368,12 @@ body {
   color: var(--text-muted);
 }
 
-.games-grid {
+/* ✨ تعديل سحري: تكبير خلايا الألعاب لضمان عدم اختفائها أو انضغاط محتواها */
+.games-grid, #gamesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
 }
 
 /* Game card */
@@ -738,12 +740,17 @@ body {
   margin-top: 1rem;
 }
 
-.modal label {
-  font-size: 0.95rem;
-  font-weight: 600;
+/* كلاس مضاف لترتيب وتأمين الحقول بالكامل داخل النوافذ */
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 100%;
+}
+
+.modal label {
+  font-size: 0.95rem;
+  font-weight: 600;
   text-align: right;
   color: var(--text-main);
 }
@@ -767,7 +774,8 @@ body {
   box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
-.modal form button[type="submit"] {
+/* ✨ تنسيق موحد لجميع أزرار الدفع والتسجيل داخل النوافذ */
+.modal form button[type="submit"], .auth-btn {
   background: var(--primary);
   color: white;
   border: none;
@@ -779,9 +787,11 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   margin-top: 0.5rem;
+  width: 100%;
+  text-align: center;
 }
 
-.modal form button[type="submit"]:hover {
+.modal form button[type="submit"]:hover, .auth-btn:hover {
   background: #e06b00;
   transform: translateY(-1px);
 }
