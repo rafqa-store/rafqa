@@ -67,17 +67,6 @@ function getFirebaseAuth() {
   return window.auth || null;
 }
 
-// ✨ دالة مطورة لجلب قاعدة البيانات متوافقة مع روابط v10 الجديدة بدون compat
-function firebaseGetDatabase() {
-  if (typeof firebase !== "undefined" && firebase.database) {
-    return firebase.database();
-  }
-  if (typeof window.firebase !== "undefined" && window.firebase.database) {
-    return window.firebase.database();
-  }
-  return window.rtdb || (typeof rtdb !== "undefined" ? rtdb : null);
-}
-
 // --- Helpers ---
 function mapCategory(cat) {
   switch (cat) {
@@ -123,6 +112,17 @@ function resetAuthForms() {
   if (registerErrorMsg) registerErrorMsg.classList.add("hidden");
 }
 
+// ✨ دالة مطورة لجلب قاعدة البيانات متوافقة مع روابط v10 الجديدة بدون compat
+function firebaseGetDatabase() {
+  if (typeof firebase !== "undefined" && firebase.database) {
+    return firebase.database();
+  }
+  if (typeof window.firebase !== "undefined" && window.firebase.database) {
+    return window.firebase.database();
+  }
+  return window.rtdb || (typeof rtdb !== "undefined" ? rtdb : null);
+}
+
 // --- Render functions ---
 function renderGames(list) {
   if (!gamesGrid) return;
@@ -135,16 +135,20 @@ function renderGames(list) {
   }
 
   list.forEach((game) => {
+    // 🪄 السطر السحري: تأمين قراءة الأسماء والصور سواءً رُفعت بالنظام القديم أو الجديد لـ لوحة التحكم
+    const gameName = game.name || game.title || "لعبة تفاعلية";
+    const gameImg = game.image || game.imageUrl || 'placeholder.png';
+
     const card = document.createElement("article");
     card.className = "game-card";
     card.dataset.id = game.id;
 
     card.innerHTML = `
       <div class="game-thumb">
-        <img src="${game.image || 'placeholder.png'}" alt="${game.name}">
+        <img src="${gameImg}" alt="${gameName}">
       </div>
       <div class="game-body">
-        <div class="game-title">${game.name}</div>
+        <div class="game-title">${gameName}</div>
         <div class="game-meta">
           <span>${mapCategory(game.category)}</span>
           <span class="game-price">${game.price} ر.س</span>
@@ -173,14 +177,17 @@ function renderCart() {
     cart.forEach((item) => {
       const game = games.find((g) => g.id === item.id);
       if (!game) return;
+      const gameName = game.name || game.title || "لعبة تفاعلية";
+      const gameImg = game.image || game.imageUrl || 'placeholder.png';
+
       const row = document.createElement("div");
       row.className = "cart-item";
       row.innerHTML = `
         <div class="cart-item-thumb">
-          <img src="${game.image}" alt="${game.name}">
+          <img src="${gameImg}" alt="${gameName}">
         </div>
         <div class="cart-item-info">
-          <div class="cart-item-title">${game.name}</div>
+          <div class="cart-item-title">${gameName}</div>
           <div class="cart-item-meta">
             <span>${game.price} ر.س</span>
             <button class="cart-remove" data-remove="${game.id}">حذف</button>
@@ -202,11 +209,9 @@ function renderCart() {
 
 // --- Firebase Data Fetching المحدث بالتوافق الكامل ---
 async function loadGames() {
-  // نتحقق أولاً إذا كان الفايربيس متاحاً بالنظام الجديد أو القديم
   const currentRtdb = firebaseGetDatabase();
   
   if (currentRtdb) {
-    // القراءة المتوافقة مع النظامين لضمان السحب السريع للألعاب دون انقطاع
     const gamesRef = typeof currentRtdb.ref === "function" ? currentRtdb.ref("games") : currentRtdb;
     
     gamesRef.on("value", (snapshot) => {
@@ -244,9 +249,10 @@ if (searchToggle && searchBar) {
 if (searchInput) {
   searchInput.addEventListener("input", (e) => {
     const q = e.target.value.trim().toLowerCase();
-    filteredGames = games.filter((g) =>
-      g.name.toLowerCase().includes(q)
-    );
+    filteredGames = games.filter((g) => {
+      const gameName = g.name || g.title || "";
+      return gameName.toLowerCase().includes(q);
+    });
     renderGames(filteredGames);
   });
 }
@@ -280,8 +286,11 @@ if (gamesGrid) {
       renderCart();
     } else {
       selectedGame = game;
-      if (modalImage) modalImage.src = game.image;
-      if (modalTitle) modalTitle.textContent = game.name;
+      const gameName = game.name || game.title || "لعبة تفاعلية";
+      const gameImg = game.image || game.imageUrl || 'placeholder.png';
+
+      if (modalImage) modalImage.src = gameImg;
+      if (modalTitle) modalTitle.textContent = gameName;
       if (modalCategory) modalCategory.textContent = mapCategory(game.category);
       if (modalDescription) modalDescription.textContent = game.description;
       if (modalPrice) modalPrice.textContent = `${game.price} ر.س`;
