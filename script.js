@@ -54,28 +54,6 @@ let selectedGame = null;
 let cart = [];
 let currentUser = null;
 
-// ✨ دالة المرجعية الأصلية والمستقرة للـ Auth
-function getFirebaseAuth() {
-  if (typeof firebase !== "undefined" && firebase.auth) {
-    return firebase.auth();
-  }
-  if (typeof window.firebase !== "undefined" && window.firebase.auth) {
-    return window.firebase.auth();
-  }
-  return window.auth || null;
-}
-
-// ✨ دالة المرجعية الأصلية والمستقرة لقاعدة البيانات (تم إعادتها للنسخة التي لا تسبب أخطاء)
-function firebaseGetDatabase() {
-  if (typeof firebase !== "undefined" && firebase.database) {
-    return firebase.database();
-  }
-  if (typeof window.firebase !== "undefined" && window.firebase.database) {
-    return window.firebase.database();
-  }
-  return window.rtdb || (typeof rtdb !== "undefined" ? rtdb : null);
-}
-
 // --- Helpers ---
 function mapCategory(cat) {
   switch (cat) {
@@ -121,7 +99,7 @@ function renderGames(list) {
   }
 
   list.forEach((game) => {
-    // 🪄 الأسطر الذكية لقراءة البيانات القديمة والجديدة دون مشاكل
+    // ✨🪄 السحر هنا: يقرأ الاسم والصورة سواءً كانت مرفوعة بالنظام القديم أو الجديد لـ لوحة التحكم
     const gameName = game.name || game.title || "لعبة تفاعلية";
     const gameImg = game.image || game.imageUrl || 'placeholder.png';
 
@@ -192,32 +170,30 @@ function renderCart() {
   if (cartCountEl) cartCountEl.textContent = cart.length;
 }
 
-// --- Firebase Data Fetching (النسخة المستقرة الأصلية مع حماية البيانات) ---
-async function loadGames() {
-  const currentRtdb = firebaseGetDatabase();
-  
-  if (currentRtdb) {
-    const gamesRef = typeof currentRtdb.ref === "function" ? currentRtdb.ref("games") : currentRtdb;
+// 🔐 --- دالة جلب الألعاب المتوافقة تماماً مع روابط الـ compat الحالية في متجركِ ---
+function loadGames() {
+  if (typeof firebase !== "undefined" && firebase.database) {
+    const gamesRef = firebase.database().ref("games");
     
-    if (gamesRef && typeof gamesRef.on === "function") {
-      gamesRef.on("value", (snapshot) => {
-        games = [];
-        if (snapshot.exists()) {
-          snapshot.forEach((childSnapshot) => {
-            games.push({
-              id: childSnapshot.key,
-              ...childSnapshot.val()
-            });
+    gamesRef.on("value", (snapshot) => {
+      games = [];
+      if (snapshot.exists()) {
+        snapshot.forEach((childSnapshot) => {
+          games.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
           });
-          games.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-        }
-        filteredGames = [...games];
-        renderGames(filteredGames);
-        renderCart();
-      }, (error) => {
-        console.error("خطأ أثناء جلب الألعاب:", error);
-      });
-    }
+        });
+        games.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      }
+      filteredGames = [...games];
+      renderGames(filteredGames);
+      renderCart();
+    }, (error) => {
+      console.error("خطأ أثناء جلب الألعاب من الفايربيس:", error);
+    });
+  } else {
+    console.error("خطأ: مكتبة Firebase Database لم يتم تحميلها بشكل صحيح.");
   }
 }
 
@@ -358,18 +334,17 @@ document.addEventListener("click", () => {
 
 if (btnLogout) {
   btnLogout.addEventListener("click", () => {
-    const currentAuth = getFirebaseAuth();
-    if (!currentAuth) return;
-
-    if (confirm("هل تريد تسجيل الخروج؟")) {
-      currentAuth.signOut().then(() => {
-        if (userDropdown) userDropdown.classList.add("hidden");
-        const oldNotice = document.getElementById("cartAuthNotice");
-        if (oldNotice) oldNotice.remove();
-        alert("تم تسجيل الخروج بنجاح.");
-      }).catch((error) => {
-        console.error("خطأ أثناء تسجيل الخروج:", error);
-      });
+    if (typeof firebase !== "undefined" && firebase.auth) {
+      if (confirm("هل تريد تسجيل الخروج؟")) {
+        firebase.auth().signOut().then(() => {
+          if (userDropdown) userDropdown.classList.add("hidden");
+          const oldNotice = document.getElementById("cartAuthNotice");
+          if (oldNotice) oldNotice.remove();
+          alert("تم تسجيل الخروج بنجاح.");
+        }).catch((error) => {
+          console.error("خطأ أثناء تسجيل الخروج:", error);
+        });
+      }
     }
   });
 }
@@ -381,7 +356,7 @@ if (btnMyOrders) {
   });
 }
 
-// 🔐 --- تسجيل الدخول (رقم الجوال أو البريد الإلكتروني) ---
+// 🔐 --- تسجيل الدخول الكلاسيكي المتوافق ---
 if (loginForm) {
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -389,19 +364,19 @@ if (loginForm) {
 
     let inputVal = loginEmail.value.trim();
     const passwordVal = loginPassword.value;
-    const currentAuth = getFirebaseAuth();
 
-    if (!currentAuth) {
+    if (typeof firebase === "undefined" || !firebase.auth) {
       alert("خطأ: لم يتم تحميل خدمة التحقق من الفايربيس بعد.");
       return;
     }
 
+    // دعم تسجيل الدخول برقم الجوال عبر تحويله لبريد وهمي داخلياً
     if (/^[0-9]+$/.test(inputVal) && inputVal.startsWith("05")) {
       inputVal = `${inputVal}@rafqa-phone.com`;
     }
 
     try {
-      await currentAuth.signInWithEmailAndPassword(inputVal, passwordVal);
+      await firebase.auth().signInWithEmailAndPassword(inputVal, passwordVal);
       closeModal(loginModal);
       resetAuthForms();
       const oldNotice = document.getElementById("cartAuthNotice");
@@ -421,7 +396,7 @@ if (loginForm) {
   });
 }
 
-// 🔐 --- إنشاء حساب جديد ---
+// 🔐 --- إنشاء حساب جديد كلاسيكي متوافق ---
 if (registerForm) {
   registerForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -429,36 +404,19 @@ if (registerForm) {
 
     const nameVal = registerName.value.trim();
     let emailVal = registerEmail.value.trim();
-    const phoneVal = registerPhone.value.trim();
     const passwordVal = registerPassword.value;
-    
-    const currentAuth = getFirebaseAuth();
-    if (!currentAuth) return;
 
-    if (phoneVal.length < 10 || !phoneVal.startsWith("05")) {
-      if (registerErrorMsg) {
-        registerErrorMsg.textContent = "❌ يرجى إدخال رقم جوال سعودي صحيح مكون من 10 خانات ويبدأ بـ 05.";
-        registerErrorMsg.classList.remove("hidden");
-      }
-      return;
-    }
-
-    if (!emailVal) {
-      emailVal = `${phoneVal}@rafqa-phone.com`;
-    }
+    if (typeof firebase === "undefined" || !firebase.auth) return;
 
     try {
-      const userCredential = await currentAuth.createUserWithEmailAndPassword(emailVal, passwordVal);
+      const userCredential = await firebase.auth().createUserWithEmailAndPassword(emailVal, passwordVal);
       const user = userCredential.user;
 
-      if (user.updateProfile) {
-        await user.updateProfile({
-          displayName: nameVal,
-          photoURL: phoneVal 
-        });
-      }
+      await user.updateProfile({
+        displayName: nameVal
+      });
 
-      currentUser = currentAuth.currentUser || user;
+      currentUser = firebase.auth().currentUser || user;
       updateHeaderUser(currentUser);
 
       closeModal(registerModal);
@@ -472,7 +430,7 @@ if (registerForm) {
       if (registerErrorMsg) {
         registerErrorMsg.classList.remove("hidden");
         if (error.code === "auth/email-already-in-use") {
-          registerErrorMsg.textContent = "❌ رقم الجوال أو البريد الإلكتروني هذا مسجل بالفعل مسبقاً.";
+          registerErrorMsg.textContent = "❌ البريد الإلكتروني هذا مسجل بالفعل مسبقاً.";
         } else if (error.code === "auth/weak-password") {
           registerErrorMsg.textContent = "❌ كلمة المرور ضعيفة جداً، يجب أن تكون من 6 خانات على الأقل.";
         } else {
@@ -510,12 +468,10 @@ if (cartItemsEl) {
   });
 }
 
-// --- مراقب وموثق حالة الدخول المباشر ---
+// --- تشغيل النظام ومراقبة حالة الدخول المباشر ---
 function initializeAppLogic() {
-  const currentAuth = getFirebaseAuth();
-
-  if (currentAuth) {
-    currentAuth.onAuthStateChanged((user) => {
+  if (typeof firebase !== "undefined" && firebase.auth) {
+    firebase.auth().onAuthStateChanged((user) => {
       currentUser = user;
       updateHeaderUser(user);
       if (user) {
@@ -530,5 +486,5 @@ function initializeAppLogic() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-  setTimeout(initializeAppLogic, 1000); 
+  initializeAppLogic();
 });
