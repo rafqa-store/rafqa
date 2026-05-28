@@ -7,14 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
-  <script src="https://js.stripe.com"></script>
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
   <header class="header">
     <div class="logo-area">
-      <div class="logo-circle">
-        <img src="logo.png" alt="Rafqa Logo" class="site-logo">
-      </div>
+      <div class="logo-circle">R</div>
       <span class="site-name">Rafqa</span>
     </div>
 
@@ -40,19 +38,11 @@
     <input type="text" id="searchInput" placeholder="ابحث عن لعبة..." />
   </section>
 
-  <section class="welcome-banner">
-    <div class="banner-content">
-        <h1>مرحباً بك في Rafqa</h1>
-        <p>عروض تفاعلية لألعاب PowerPoint تجعل التعلم واللعب أكثر متعة.</p>
-        <button id="scrollToGames" class="banner-btn">استكشف الألعاب</button>
-    </div>
-    
-    <div class="banner-gaming-assets">
-        <div class="game-asset icon-gamepad"><i class="fas fa-gamepad"></i></div>
-        <div class="game-asset icon-puzzle"><i class="fas fa-puzzle-piece"></i></div>
-        <div class="game-asset icon-dice"><i class="fas fa-dice"></i></div>
-        <div class="game-asset icon-trophy"><i class="fas fa-trophy"></i></div>
-        <div class="game-asset icon-star"><i class="fas fa-star"></i></div>
+  <section class="hero">
+    <div class="hero-content">
+      <h1>مرحباً بك في Rafqa</h1>
+      <p>عروض تفاعلية لألعاب PowerPoint تجعل التعلم واللعب أكثر متعة.</p>
+      <button class="primary-btn" id="scrollToGames">استكشف الألعاب</button>
     </div>
   </section>
 
@@ -60,19 +50,19 @@
     <h2>التصنيفات الرئيسية</h2>
     <div class="category-grid">
       <button class="category-card" data-category="eid">
-        <span class="cat-icon" style="color: #FF823A;"><i class="fas fa-moon"></i></span>
+        <span class="cat-icon">🌙</span>
         <span class="cat-name">ألعاب العيد</span>
       </button>
       <button class="category-card" data-category="brain">
-        <span class="cat-icon" style="color: #FF823A;"><i class="fas fa-brain"></i></span>
+        <span class="cat-icon">🧠</span>
         <span class="cat-name">ألعاب الذكاء</span>
       </button>
       <button class="category-card" data-category="summer">
-        <span class="cat-icon" style="color: #FF823A;"><i class="fas fa-laptop-code"></i></span>
+        <span class="cat-icon">☀️</span>
         <span class="cat-name">ألعاب الذكاء الاصطناعي</span>
       </button>
       <button class="category-card" data-category="edu">
-        <span class="cat-icon" style="color: #FF823A;"><i class="fas fa-book-open"></i></span>
+        <span class="cat-icon">📚</span>
         <span class="cat-name">ألعاب تعليمية</span>
       </button>
     </div>
@@ -86,8 +76,8 @@
     <div class="games-grid" id="gamesGrid"></div>
   </main>
 
-  <div class="modal hidden" id="gameModal">
-    <div class="modal-content">
+  <div class="modal-overlay hidden" id="gameModal">
+    <div class="modal">
       <button class="close-modal" data-close="gameModal">✕</button>
       <div class="modal-body">
         <img id="modalImage" alt="" />
@@ -117,19 +107,19 @@
     </div>
   </aside>
 
-  <section class="modal hidden" id="checkoutSection">
-    <div class="modal-content" style="text-align: center;">
-      <button class="close-modal" data-close="checkoutSection" id="closeCheckout">✕</button>
+  <section class="checkout hidden" id="checkoutSection">
+    <div class="checkout-inner">
       <h2>إتمام الشراء</h2>
-      <p style="margin: 10px 0; color: var(--text-muted);">سيتم إرسال رابط تحميل الألعاب بعد تأكيد الدفع.</p>
-      <p class="checkout-note">* يتم إعداد وتجهيز بوابة الدفع بشكل آمن ومباشر.</p>
+      <p style="margin: 10px 0; color: var(--text-muted);">سيتم إرسال رابط تحميل الألعاب إلى بريدك بعد الدفع.</p>
+      <p class="checkout-note">* يمكنك لاحقاً ربط هذه الصفحة ببوابة دفع (PayTabs / HyperPay / Stripe).</p>
+      <button class="secondary-btn" id="closeCheckout" style="margin-top: 15px;">إغلاق</button>
     </div>
   </section>
 
-  <div id="loginModal" class="modal hidden">
-    <div class="modal-content">
+  <div id="loginModal" class="modal-overlay hidden">
+    <div class="modal">
       <button class="close-modal" data-close="loginModal">&times;</button>
-      <h2>تسجيل الدخول</h2>
+      <h3>تسجيل الدخول</h3>
       
       <form id="loginForm">
         <div class="form-group">
@@ -144,10 +134,11 @@
 
         <div id="loginErrorMsg" class="error-text hidden"></div>
 
-        <button type="submit" class="auth-btn">دخول</button>
+        <button type="submit" class="primary-btn" style="width: 100%; margin-top: 5px;">دخول</button>
       </form>
 
-      <div class="auth-divider"><span>أو</span></div>
+      <div class="auth-divider" style="text-align: center; margin: 15px 0; color: var(--text-muted);"><span>أو</span></div>
+      
       <button id="googleLogin" class="google-btn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border:1px solid #ddd; background:#fff; border-radius:var(--radius-md); cursor:pointer; font-family:inherit;">
         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="18">
         تسجيل الدخول بواسطة Google
@@ -159,10 +150,10 @@
     </div>
   </div>
 
-  <div id="registerModal" class="modal hidden">
-    <div class="modal-content">
+  <div id="registerModal" class="modal-overlay hidden">
+    <div class="modal">
       <button class="close-modal" data-close="registerModal">&times;</button>
-      <h2>إنشاء حساب جديد</h2>
+      <h3>إنشاء حساب جديد</h3>
       
       <form id="registerForm">
         <div class="form-group">
@@ -171,7 +162,7 @@
         </div>
 
         <div class="form-group">
-          <label for="registerPhone">رقم الجوال</label>
+          <label for="registerPhone">رقم الجوال الحقيقي</label>
           <input type="tel" id="registerPhone" placeholder="05xxxxxxxx" required maxlength="10">
         </div>
 
@@ -187,21 +178,23 @@
 
         <div id="registerErrorMsg" class="error-text hidden"></div>
 
-        <button type="submit" class="auth-btn">تسجيل وتفعيل الحساب 🎉</button>
+        <button type="submit" class="primary-btn" style="width: 100%; margin-top: 5px;">تسجيل وتفعيل الحساب 🎉</button>
       </form>
 
       <p class="auth-switch" style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: var(--text-muted);">
         لديكِ حساب بالفعل؟ <a href="#" id="openLogin" style="color: var(--primary); font-weight: 600; text-decoration: none;">تسجيل الدخول</a>
       </p>
+      <p class="login-note" style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">* يتم حفظ حسابك في Firebase بشكل حقيقي وآمن.</p>
     </div>
   </div>
-<script type="module" src="firebase-app.js"></script>
-<script type="module" src="firebase-auth.js"></script>
-<script type="module" src="firebase-database.js"></script>
-<script type="module" src="firebase-firestore.js"></script>
-<script type="module" src="firebase-storage.js"></script>
 
-<script type="module" src="firebase-config.js"></script>
-<script type="module" src="script.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
