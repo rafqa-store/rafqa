@@ -1,6 +1,3 @@
-/* ==========================================================================
-   ✨ التنسيقات العامة والـ Reset
-   ========================================================================== */
 *,
 *::before,
 *::after {
@@ -8,7 +5,7 @@
 }
 
 :root {
-  --bg: #fcfbfa;            /* إضاءة خلفية بيضاء دافئة ومريحة */
+  --bg: #fcfbfa;               /* إضاءة خلفية بيضاء دافئة ومريحة */
   --card-bg: #ffffff;
   --primary: #ff7a00;         /* الهوية البرتقالية الدافئة لـ Rafqa */
   --primary-soft: #fff2e6;    /* خلفيات برتقالية ناعمة للعناصر */
@@ -30,9 +27,7 @@ body {
   direction: rtl;
 }
 
-/* ==========================================================================
-   ✨ تعديل وتنسيق الـ Header ليتناسب مع الشعار الدائري الجديد
-   ========================================================================== */
+/* Header */
 .header {
   position: sticky;
   top: 0;
@@ -46,41 +41,31 @@ body {
   border-bottom: 1px solid rgba(148, 163, 184, 0.15);
 }
 
-/* حاوية الشعار واسم الموقع لترتيب العناصر أفقياً */
 .logo-area {
   display: flex;
   align-items: center;
-  gap: 10px; /* مسافة مريحة بين الدائرة واسم المتجر */
+  gap: 0.6rem;
 }
 
 .logo-circle {
-  width: 45px;          /* حجم مثالي ومتناسق */
-  height: 45px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--primary); /* اللون البرتقالية المحيط */
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;       /* 🪄 السطر السحري الذي يقص الشعار تلقائياً على شكل دائرة ويمنع تمدده */
-  flex-shrink: 0;       /* يمنع انضغاط الدائرة نهائياً */
-  box-shadow: 0 4px 10px rgba(255, 122, 0, 0.2); /* لمسة جمالية دافئة */
-}
-
-/* تنسيق الصورة داخل الدائرة برمجياً */
-.logo-circle img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;    /* يضمن توسط الشعار واحتوائه بالكامل دون أي تشوه */
-  display: block;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
 .site-name {
-  font-size: 1.3rem;
   font-weight: 700;
+  font-size: 1.2rem;
   color: var(--text-main);
 }
 
-/* باقي التنسيقات المستقرة للموقع */
 .header-actions {
   display: flex;
   align-items: center;
@@ -196,78 +181,36 @@ body {
   border-color: var(--primary);
 }
 
-/* ==========================================================================
-   🎮 تنسيق البانر الترحيبي المحمي والمطور كلياً من المشاكل البصرية
-   ========================================================================== */
-.welcome-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #FFFDF9 0%, #FFF5EF 100%);
-  border-radius: 24px;
-  padding: 40px 50px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(255, 122, 0, 0.05);
-  margin: 20px 1.25rem 40px 1.25rem;
-}
-
-.banner-content {
-  flex: 1;
-  max-width: 55%;
-  z-index: 2;
-  text-align: right;
-}
-
-.banner-content h1 {
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: var(--text-main);
-  margin: 0 0 12px 0;
-}
-
-.banner-content p {
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  margin: 0 0 25px 0;
-  line-height: 1.6;
-}
-
-.banner-gaming-assets {
-  position: relative;
-  width: 40%;
-  height: 250px;
+/* Hero */
+.hero {
+  padding: 2.5rem 1.25rem 2rem;
   display: flex;
   justify-content: center;
-  align-items: center;
-  z-index: 1;
-  flex-shrink: 0;
 }
 
-.game-asset {
-  position: absolute;
-  color: var(--primary); 
-  opacity: 0.85;
-  filter: drop-shadow(0 4px 12px rgba(255, 122, 0, 0.18));
-  animation: floatAnimation 4s ease-in-out infinite;
+.hero-content {
+  max-width: 900px;
+  width: 100%;
+  background: linear-gradient(135deg, #fff3e6 0%, #ffffff 100%);
+  border-radius: 24px;
+  padding: 2.5rem 1.5rem;
+  box-shadow: var(--shadow-soft);
+  text-align: center;
 }
 
-.icon-gamepad { font-size: 70px; top: 15%; right: 25%; animation-delay: 0s; }
-.icon-puzzle  { font-size: 42px; top: 10%; left: 10%; animation-delay: 1s; color: var(--accent); }
-.icon-dice    { font-size: 45px; bottom: 15%; right: 10%; animation-delay: 1.5s; color: #ffa166; }
-.icon-trophy  { font-size: 48px; bottom: 10%; left: 20%; animation-delay: 0.5s; }
-.icon-star    { font-size: 25px; top: 55%; right: 45%; animation-delay: 2s; color: #ffdcc7; }
-
-@keyframes floatAnimation {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-12px) rotate(6deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
+.hero-content h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.9rem;
+  font-weight: 700;
 }
 
-/* Buttons & Controls */
+.hero-content p {
+  margin: 0 0 1.5rem;
+  color: var(--text-muted);
+}
+
 .primary-btn,
-.secondary-btn,
-.banner-btn {
+.secondary-btn {
   border: none;
   cursor: pointer;
   font-family: inherit;
@@ -278,13 +221,13 @@ body {
   transition: all 0.2s ease;
 }
 
-.primary-btn, .banner-btn {
+.primary-btn {
   background: var(--primary);
   color: #fff;
   box-shadow: 0 8px 20px rgba(255, 122, 0, 0.25);
 }
 
-.primary-btn:hover, .banner-btn:hover {
+.primary-btn:hover {
   transform: translateY(-1px);
   background: #e06b00;
   box-shadow: 0 12px 24px rgba(255, 122, 0, 0.35);
@@ -340,10 +283,7 @@ body {
 }
 
 .cat-icon {
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 1.4rem;
 }
 
 .cat-name {
@@ -368,12 +308,10 @@ body {
   color: var(--text-muted);
 }
 
-/* ✨ تعديل سحري: تكبير خلايا الألعاب لضمان عدم اختفائها أو انضغاط محتواها */
-.games-grid, #gamesGrid {
+.games-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
-  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.25rem;
 }
 
 /* Game card */
@@ -461,53 +399,46 @@ body {
   color: #fff;
 }
 
-/* ==========================================================================
-   🚨 نظام النوافذ المنبثقة (Modals) الشامل والآمن عائم في المنتصف تماماً 
-   ========================================================================== */
-.modal {
-  position: fixed;            /* عائم وثابت فوق الموقع بالكامل 📌 */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(15, 23, 42, 0.6); /* خلفية داكنة مع بلور خفيف */
+/* Modals & Overlays */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
   backdrop-filter: blur(4px);
   display: flex;
-  align-items: center;        /* توسيط عمودي سحري */
-  justify-content: center;     /* توسيط أفقي سحري */
-  z-index: 9999;              /* فوق كل شيء في الموقع بلا استثناء 🚀 */
-  opacity: 1;
-  transition: opacity 0.3s ease;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
 }
 
-/* صندوق المحتوى الداخلي لجميع النوافذ (تسجيل، تفاصيل اللعبة، إلخ) */
-.modal-content, .modal-inner, .checkout-inner {
+.modal {
   background: var(--card-bg);
-  padding: 30px 25px;
   border-radius: 20px;
+  padding: 1.5rem;
+  max-width: 500px;
   width: 92%;
-  max-width: 460px;
-  max-height: 90vh;
-  overflow-y: auto;           /* تمرير داخلي مريح إذا كانت الشاشة صغيرة */
+  box-shadow: var(--shadow-soft);
   position: relative;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  animation: modalAppear 0.3s ease-out; /* تأثير ظهور احترافي */
+  overflow: visible; /* يسمح لزر الإغلاق بالظهور */
 }
 
 .close-modal {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: -12px;
+  left: -12px;
   border: none;
-  background: transparent;
+  background: #fff;
   cursor: pointer;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
   z-index: 10;
-  transition: color 0.2s;
 }
 
 .close-modal:hover {
@@ -522,7 +453,7 @@ body {
 
 .modal-body img {
   width: 100%;
-  max-height: 230px;
+  max-height: 250px;
   border-radius: 12px;
   object-fit: cover;
 }
@@ -539,17 +470,7 @@ body {
   color: var(--primary);
 }
 
-/* إخفاء النوافذ نهائياً وبقوة عند تفعيل كلاس hidden */
-.modal.hidden {
-  display: none !important;
-}
-
-@keyframes modalAppear {
-  from { transform: scale(0.92); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* Cart panel */
+/* Cart panel FIX */
 .cart-panel {
   position: fixed;
   top: 0;
@@ -653,18 +574,24 @@ body {
   font-size: 1rem;
 }
 
-/* 🚨 صندوق رسائل التنبيه والخطأ باللون الأحمر المحدث */
-.error-text {
-  color: #dc2626;
-  background-color: #fef2f2;
-  border: 1px solid #fca5a5;
-  padding: 10px 12px;
-  border-radius: var(--radius-md);
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-align: right;
-  margin-top: 8px;
-  width: 100%;
+/* Checkout Section */
+.checkout {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 160;
+}
+
+.checkout-inner {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 1.5rem;
+  max-width: 420px;
+  width: 92%;
+  text-align: center;
 }
 
 .checkout-note {
@@ -678,16 +605,19 @@ body {
   display: none !important;
 }
 
-/* ==========================================================================
-   📱 شاشات الـ Media Queries المستقرة والمحسنة للهواتف
-   ========================================================================== */
+/* Media Queries */
 @media (min-width: 768px) {
-  .category-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .hero-content {
+    padding: 3rem 2.5rem;
+    text-align: right;
   }
 
-  .modal-content {
-    max-width: 500px;
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .modal-body {
@@ -704,34 +634,8 @@ body {
   }
 }
 
-@media (max-width: 768px) {
-  .welcome-banner {
-    flex-direction: column;
-    text-align: center;
-    padding: 35px 20px;
-    margin: 15px 1rem 30px 1rem;
-    gap: 25px;
-  }
-  .banner-content {
-    max-width: 100%;
-    text-align: center;
-    order: 1;
-  }
-  .banner-gaming-assets {
-    width: 100%;
-    height: 160px;
-    order: 2;
-  }
-  /* أحجام متناسقة للأجهزة الذكية تمنع الخروج تماماً */
-  .icon-gamepad { font-size: 52px; top: 10%; right: 40%; }
-  .icon-puzzle  { font-size: 32px; top: 5%; left: 15%; }
-  .icon-dice    { font-size: 32px; bottom: 10%; right: 15%; }
-  .icon-trophy  { font-size: 36px; bottom: 5%; left: 25%; }
-  .icon-star    { font-size: 20px; top: 45%; right: 50%; }
-}
-
 /* ==========================================================================
-   🛠️ تنسيق نموذج الدخول / التسجيل برقم الجوال داخل الـ Modal
+   🛠️ التعديل الجديد المضاف لإصلاح شكل وتداخل نموذج الدخول / التسجيل
    ========================================================================== */
 .modal form {
   display: flex;
@@ -740,17 +644,12 @@ body {
   margin-top: 1rem;
 }
 
-/* كلاس مضاف لترتيب وتأمين الحقول بالكامل داخل النوافذ */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-}
-
 .modal label {
   font-size: 0.95rem;
   font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   text-align: right;
   color: var(--text-main);
 }
@@ -761,8 +660,8 @@ body {
   border: 1px solid rgba(148, 163, 184, 0.4);
   font-family: inherit;
   font-size: 0.95rem;
-  direction: ltr; /* لتسهيل قراءة أرقام الهواتف والأكواد بشكل صحيح */
-  text-align: right; /* المحاذاة لليمين لتناسب اللغة العربية */
+  direction: ltr; /* لتسهيل كتابة البريد الإلكتروني والباسورد بشكل صحيح */
+  text-align: left;
   outline: none;
   width: 100%;
   background-color: var(--card-bg);
@@ -774,8 +673,7 @@ body {
   box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
-/* ✨ تنسيق موحد لجميع أزرار الدفع والتسجيل داخل النوافذ */
-.modal form button[type="submit"], .auth-btn {
+.modal form button[type="submit"] {
   background: var(--primary);
   color: white;
   border: none;
@@ -787,11 +685,20 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   margin-top: 0.5rem;
-  width: 100%;
-  text-align: center;
 }
 
-.modal form button[type="submit"]:hover, .auth-btn:hover {
+.modal form button[type="submit"]:hover {
   background: #e06b00;
   transform: translateY(-1px);
+}
+/* المحتوى الداخلي للـ modal-overlay */
+.modal-overlay .modal {
+  position: relative;
+  width: 92%;
+  max-width: 500px;
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  overflow: visible;
 }
