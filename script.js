@@ -227,7 +227,7 @@ if (heroLearnMore) {
     overlay.className = "modal-overlay hidden";
     overlay.innerHTML =
       '<div class="modal" style="max-width:420px;text-align:right;">' +
-        '<button class="close-modal" onclick="document.getElementById('howToBuyModal').style.display='none';document.getElementById('howToBuyModal').classList.add('hidden');">&times;</button>' +
+        '<button class="close-modal" onclick="var m=document.getElementById(\'howToBuyModal\');m.style.display=\'none\';m.classList.add(\'hidden\');">&times;</button>' +
         '<h3 style="margin:0 0 1rem;color:var(--primary);">🛒 كيف تشتري؟</h3>' +
         '<div style="display:flex;flex-direction:column;gap:0.75rem;">' +
           '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
