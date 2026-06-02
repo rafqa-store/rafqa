@@ -683,12 +683,25 @@ body {
 }
 
 .cart-remove {
-  border: none;
-  background: transparent;
+  border: 1px solid #ef4444;
+  background: #fff;
   color: #ef4444;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-family: inherit;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.cart-remove:hover {
+  background: #ef4444;
+  color: #fff;
 }
 
 .cart-footer {
