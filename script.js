@@ -219,7 +219,45 @@ if (scrollToGamesBtn) {
 var heroLearnMore = document.getElementById("heroLearnMore");
 if (heroLearnMore) {
   heroLearnMore.addEventListener("click", function() {
-    alert("طريقة الشراء:\n\n1. تصفّحي الألعاب واختاري ما يناسبك\n2. اضغطي إضافة إلى السلة\n3. اضغطي إتمام الشراء\n4. أكملي الدفع بأمان\n5. ستصلك اللعبة فوراً على بريدك الإلكتروني\n\nللاستفسار واتساب: 0570261205");
+    var modal = document.getElementById("howToBuyModal");
+    if (modal) { openModal(modal); return; }
+
+    var overlay = document.createElement("div");
+    overlay.id = "howToBuyModal";
+    overlay.className = "modal-overlay hidden";
+    overlay.innerHTML =
+      '<div class="modal" style="max-width:420px;text-align:right;">' +
+        '<button class="close-modal" onclick="document.getElementById('howToBuyModal').style.display='none';document.getElementById('howToBuyModal').classList.add('hidden');">&times;</button>' +
+        '<h3 style="margin:0 0 1rem;color:var(--primary);">🛒 كيف تشتري؟</h3>' +
+        '<div style="display:flex;flex-direction:column;gap:0.75rem;">' +
+          '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
+            '<span style="font-size:1.4rem;">1️⃣</span>' +
+            '<span>تصفّحي الألعاب واختاري ما يناسبك</span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
+            '<span style="font-size:1.4rem;">2️⃣</span>' +
+            '<span>اضغطي <strong>إضافة إلى السلة</strong></span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
+            '<span style="font-size:1.4rem;">3️⃣</span>' +
+            '<span>اضغطي <strong>إتمام الشراء</strong></span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
+            '<span style="font-size:1.4rem;">4️⃣</span>' +
+            '<span>أكملي الدفع بأمان</span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
+            '<span style="font-size:1.4rem;">5️⃣</span>' +
+            '<span>ستصلك اللعبة فوراً على بريدك الإلكتروني 🎉</span>' +
+          '</div>' +
+        '</div>' +
+        '<div style="margin-top:1rem;padding:10px;background:#f0fdf4;border-radius:10px;text-align:center;">' +
+          '<a href="https://wa.me/966570261205" target="_blank" style="color:#16a34a;font-weight:700;text-decoration:none;">📞 للاستفسار: واتساب 0570261205</a>' +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(overlay);
+    openModal(overlay);
   });
 }
 
@@ -241,6 +279,7 @@ if (gamesGrid) {
     if (addId) {
       cart.push({ id: game.id });
       renderCart();
+      showToast("✅ تمت إضافة " + game.name + " إلى السلة!");
     } else {
       selectedGame = game;
       if (modalImage) modalImage.src = game.image;
@@ -417,9 +456,22 @@ if (cartItemsEl) {
   cartItemsEl.addEventListener("click", function(e) {
     var removeId = e.target.dataset.remove;
     if (!removeId) return;
-    cart = cart.filter(function(item) { return item.id !== removeId; });
+    // احذف أول عنصر فقط بهذا الـ id
+    var idx = cart.findIndex(function(item) { return item.id === removeId; });
+    if (idx !== -1) cart.splice(idx, 1);
     renderCart();
   });
+}
+
+function showToast(msg) {
+  var old = document.getElementById("rafqaToast");
+  if (old) old.remove();
+  var toast = document.createElement("div");
+  toast.id = "rafqaToast";
+  toast.textContent = msg;
+  toast.style.cssText = "position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#2b2b2b;color:#fff;padding:10px 20px;border-radius:999px;font-size:0.9rem;z-index:9999;opacity:1;transition:opacity 0.4s;white-space:nowrap;";
+  document.body.appendChild(toast);
+  setTimeout(function() { toast.style.opacity = "0"; setTimeout(function() { toast.remove(); }, 400); }, 2500);
 }
 
 function initializeAppLogic() {
