@@ -579,7 +579,21 @@ body {
 .close-modal:hover {
   color: #ef4444;
 }
+.cart-header .close-modal {
+  position: static;
+  width: 28px;
+  height: 28px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  background: #f3f4f6;
+  box-shadow: none;
+  border: none;
+}
 
+.cart-header .close-modal:hover {
+  background: #fee2e2;
+  color: #ef4444;
+}
 .modal-body {
   display: flex;
   flex-direction: column;
