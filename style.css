@@ -682,16 +682,17 @@ body {
   margin-top: 0.25rem;
 }
 
+/* ابحث عن .cart-remove وعدّل font-size فقط */
 .cart-remove {
   border: 1px solid #ef4444;
   background: #fff;
   color: #ef4444;
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 0.85rem;   /* ← كانت 0.75rem، رفعناها شوي */
   font-family: inherit;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
+  width: 24px;          /* ← كانت 22px */
+  height: 24px;         /* ← كانت 22px */
   display: flex;
   align-items: center;
   justify-content: center;
