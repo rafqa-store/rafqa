@@ -161,7 +161,7 @@ function renderCart() {
           '<div class="cart-item-title">' + game.name + '</div>' +
           '<div class="cart-item-meta">' +
             '<span>' + game.price + ' ر.س</span>' +
-            '<button class="cart-remove" data-remove="' + game.id + '">حذف</button>' +
+            '<button class="cart-remove" data-remove="' + game.id + '">✕</button>'' +
           '</div>' +
         '</div>';
       cartItemsEl.appendChild(row);
