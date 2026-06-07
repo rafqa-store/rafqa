@@ -86,9 +86,8 @@ function loadUserProfile(user) {
     var data = doc.exists ? doc.data() : {};
     var name = (data && data.name) ? data.name : (user.displayName || "مستخدم");
     var phone = (data && data.phone) ? data.phone : "";
-    var email = (data && data.email) ? data.email : 
+    var email = (data && data.email) ? data.email :
                 (user.email && user.email.indexOf("@rafqa-store.com") === -1 ? user.email : "");
-    var info = phone || email || "";
 
     var oldDiv = document.getElementById("userProfileInfo");
     if (oldDiv) oldDiv.remove();
@@ -105,7 +104,7 @@ function loadUserProfile(user) {
     nameEl.textContent = "👤 " + name;
     profileDiv.appendChild(nameEl);
 
-    if (info) {
+    if (phone || email) {
       var infoEl = document.createElement("div");
       infoEl.style.fontSize = "0.8rem";
       infoEl.style.color = "var(--text-muted)";
@@ -191,6 +190,7 @@ function loadGames() {
     filteredGames = games.slice();
     renderGames(filteredGames);
     renderCart();
+    populateGameSelect(); // تحديث قائمة الألعاب في نموذج الآراء
   });
 }
 
@@ -231,24 +231,19 @@ if (heroLearnMore) {
         '<h3 style="margin:0 0 1rem;color:var(--primary);">🛒 كيف تشتري؟</h3>' +
         '<div style="display:flex;flex-direction:column;gap:0.75rem;">' +
           '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
-            '<span style="font-size:1.4rem;">1️⃣</span>' +
-            '<span>تصفّحي الألعاب واختاري ما يناسبك</span>' +
+            '<span style="font-size:1.4rem;">1️⃣</span><span>تصفّحي الألعاب واختاري ما يناسبك</span>' +
           '</div>' +
           '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
-            '<span style="font-size:1.4rem;">2️⃣</span>' +
-            '<span>اضغطي <strong>إضافة إلى السلة</strong></span>' +
+            '<span style="font-size:1.4rem;">2️⃣</span><span>اضغطي <strong>إضافة إلى السلة</strong></span>' +
           '</div>' +
           '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
-            '<span style="font-size:1.4rem;">3️⃣</span>' +
-            '<span>اضغطي <strong>إتمام الشراء</strong></span>' +
+            '<span style="font-size:1.4rem;">3️⃣</span><span>اضغطي <strong>إتمام الشراء</strong></span>' +
           '</div>' +
           '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
-            '<span style="font-size:1.4rem;">4️⃣</span>' +
-            '<span>أكملي الدفع بأمان</span>' +
+            '<span style="font-size:1.4rem;">4️⃣</span><span>أكملي الدفع بأمان</span>' +
           '</div>' +
           '<div style="display:flex;align-items:center;gap:10px;background:var(--primary-soft);padding:10px;border-radius:10px;">' +
-            '<span style="font-size:1.4rem;">5️⃣</span>' +
-            '<span>ستصلك اللعبة فوراً على بريدك الإلكتروني 🎉</span>' +
+            '<span style="font-size:1.4rem;">5️⃣</span><span>ستصلك اللعبة فوراً على بريدك الإلكتروني 🎉</span>' +
           '</div>' +
         '</div>' +
         '<div style="margin-top:1rem;padding:10px;background:#f0fdf4;border-radius:10px;text-align:center;">' +
@@ -456,7 +451,6 @@ if (cartItemsEl) {
   cartItemsEl.addEventListener("click", function(e) {
     var removeId = e.target.dataset.remove;
     if (!removeId) return;
-    // احذف أول عنصر فقط بهذا الـ id
     var idx = cart.findIndex(function(item) { return item.id === removeId; });
     if (idx !== -1) cart.splice(idx, 1);
     renderCart();
@@ -477,7 +471,11 @@ function showToast(msg) {
 function initializeAppLogic() {
   var currentAuth = window.auth || (typeof auth !== "undefined" ? auth : null);
   if (currentAuth) {
-    currentAuth.onAuthStateChanged(function(user) { currentUser = user; updateHeaderUser(user); });
+    currentAuth.onAuthStateChanged(function(user) {
+      currentUser = user;
+      updateHeaderUser(user);
+      updateReviewFormState(user); // تحديث نموذج الآراء
+    });
   }
   try { loadGames(); } catch (error) { console.error("تعذر جلب الألعاب:", error); }
   renderCart();
@@ -490,4 +488,172 @@ window.addEventListener("DOMContentLoaded", function() {
     attempts++;
     if (currentAuth || attempts >= 30) { clearInterval(waitForFirebase); initializeAppLogic(); }
   }, 100);
+});
+
+
+// =============================================
+// ⭐ قسم آراء العملاء
+// =============================================
+
+var selectedRating = 0;
+
+function initReviews() {
+  setupStarRating();
+  loadReviews();
+
+  var submitBtn = document.getElementById("submitReview");
+  if (submitBtn) submitBtn.addEventListener("click", submitReview);
+
+  var reviewLoginLink = document.getElementById("reviewLoginLink");
+  if (reviewLoginLink) {
+    reviewLoginLink.addEventListener("click", function(e) {
+      e.preventDefault();
+      openModal(loginModal);
+    });
+  }
+}
+
+function updateReviewFormState(user) {
+  var note = document.getElementById("reviewLoginNote");
+  var submitBtn = document.getElementById("submitReview");
+  var textarea = document.getElementById("reviewText");
+  var select = document.getElementById("reviewGameSelect");
+
+  if (user) {
+    if (note) note.style.display = "none";
+    if (submitBtn) submitBtn.style.opacity = "1";
+    if (textarea) textarea.disabled = false;
+    if (select) select.disabled = false;
+  } else {
+    if (note) note.style.display = "block";
+    if (submitBtn) submitBtn.style.opacity = "0.5";
+    if (textarea) textarea.disabled = true;
+    if (select) select.disabled = true;
+  }
+}
+
+function setupStarRating() {
+  var stars = document.querySelectorAll("#starRating .star");
+  stars.forEach(function(star) {
+    star.addEventListener("click", function() {
+      selectedRating = parseInt(star.dataset.value);
+      updateStars(selectedRating);
+    });
+    star.addEventListener("mouseenter", function() {
+      updateStars(parseInt(star.dataset.value));
+    });
+    star.addEventListener("mouseleave", function() {
+      updateStars(selectedRating);
+    });
+  });
+}
+
+function updateStars(val) {
+  var stars = document.querySelectorAll("#starRating .star");
+  stars.forEach(function(s) {
+    s.style.color = parseInt(s.dataset.value) <= val ? "#f59e0b" : "#d1d5db";
+  });
+}
+
+function populateGameSelect() {
+  var select = document.getElementById("reviewGameSelect");
+  if (!select || games.length === 0) return;
+  select.innerHTML = '<option value="">اختر اللعبة التي اشتريتها</option>';
+  games.forEach(function(game) {
+    var opt = document.createElement("option");
+    opt.value = game.id;
+    opt.textContent = game.name;
+    select.appendChild(opt);
+  });
+}
+
+function submitReview() {
+  var currentAuth = window.auth || (typeof auth !== "undefined" ? auth : null);
+  var currentDb = window.db || (typeof db !== "undefined" ? db : null);
+
+  if (!currentAuth || !currentAuth.currentUser) {
+    openModal(loginModal);
+    return;
+  }
+  if (selectedRating === 0) {
+    showToast("⭐ الرجاء اختيار عدد النجوم أولاً");
+    return;
+  }
+
+  var text = document.getElementById("reviewText").value.trim();
+  var selectEl = document.getElementById("reviewGameSelect");
+  var gameId = selectEl.value;
+  var gameName = selectEl.options[selectEl.selectedIndex].text;
+
+  if (!text) { showToast("✍️ الرجاء كتابة رأيك"); return; }
+  if (!gameId) { showToast("🎮 الرجاء اختيار اللعبة"); return; }
+
+  var user = currentAuth.currentUser;
+  var review = {
+    uid: user.uid,
+    authorName: user.displayName || "مستخدم",
+    rating: selectedRating,
+    text: text,
+    gameId: gameId,
+    gameName: gameName,
+    createdAt: Date.now()
+  };
+
+  currentDb.collection("reviews").add(review)
+    .then(function() {
+      showToast("✅ تم نشر رأيك بنجاح! شكراً لك 🎉");
+      document.getElementById("reviewText").value = "";
+      document.getElementById("reviewGameSelect").value = "";
+      selectedRating = 0;
+      updateStars(0);
+    })
+    .catch(function(err) {
+      showToast("❌ حدث خطأ، حاول مجدداً");
+      console.error(err);
+    });
+}
+
+function loadReviews() {
+  var currentDb = window.db || (typeof db !== "undefined" ? db : null);
+  var grid = document.getElementById("reviewsGrid");
+  if (!currentDb || !grid) return;
+
+  currentDb.collection("reviews")
+    .orderBy("createdAt", "desc")
+    .limit(20)
+    .onSnapshot(function(snapshot) {
+      grid.innerHTML = "";
+      if (snapshot.empty) {
+        grid.innerHTML = '<div class="reviews-loading">لا توجد آراء بعد. كن أول من يشارك! 🌟</div>';
+        return;
+      }
+      snapshot.forEach(function(doc) {
+        var r = doc.data();
+        var card = document.createElement("div");
+        card.className = "review-card";
+        var stars = "";
+        for (var i = 1; i <= 5; i++) stars += (i <= r.rating ? "★" : "☆");
+        var date = r.createdAt ? new Date(r.createdAt).toLocaleDateString("ar-SA") : "";
+        card.innerHTML =
+          '<div class="review-card-header">' +
+            '<span class="review-author">👤 ' + (r.authorName || "مستخدم") + '</span>' +
+            '<span class="review-stars">' + stars + '</span>' +
+          '</div>' +
+          (r.gameName ? '<span class="review-game-tag">🎮 ' + r.gameName + '</span>' : '') +
+          '<p class="review-text">' + r.text + '</p>' +
+          '<span class="review-date">' + date + '</span>';
+        grid.appendChild(card);
+      });
+    }, function(err) {
+      console.error("خطأ في تحميل الآراء:", err);
+      grid.innerHTML = '<div class="reviews-loading">تعذّر تحميل الآراء.</div>';
+    });
+}
+
+// تشغيل قسم الآراء بعد Firebase
+window.addEventListener("DOMContentLoaded", function() {
+  var waitReviews = setInterval(function() {
+    var currentDb = window.db || (typeof db !== "undefined" ? db : null);
+    if (currentDb) { clearInterval(waitReviews); initReviews(); }
+  }, 200);
 });
