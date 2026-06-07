@@ -13,9 +13,9 @@
 <body>
   <header class="header">
     <div class="logo-area">
-<div class="logo-circle">
-  <img src="logo.png" alt="Rafqa" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
-</div>
+      <div class="logo-circle">
+        <img src="logo.png" alt="Rafqa" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+      </div>
       <span class="site-name">Rafqa</span>
     </div>
 
@@ -59,7 +59,6 @@
         <div class="hero-divider"></div>
         <div class="hero-stat"><span class="stat-num">4</span><span class="stat-label">تصنيف</span></div>
         <div class="hero-divider"></div>
-        
       </div>
     </div>
   </section>
@@ -93,6 +92,44 @@
     </div>
     <div class="games-grid" id="gamesGrid"></div>
   </main>
+
+  <!-- ===== قسم آراء العملاء ===== -->
+  <section class="reviews-section" id="reviewsSection">
+    <div class="reviews-header">
+      <h2>⭐ آراء عملائنا</h2>
+      <p class="reviews-subtitle">شاركنا تجربتك بعد الشراء</p>
+    </div>
+
+    <div class="review-form-wrapper" id="reviewFormWrapper">
+      <div class="review-form-card">
+        <h4>✍️ أضف رأيك</h4>
+
+        <div class="star-rating" id="starRating">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
+        </div>
+
+        <select id="reviewGameSelect" class="review-input">
+          <option value="">اختر اللعبة التي اشتريتها</option>
+        </select>
+
+        <textarea id="reviewText" class="review-input" placeholder="شاركنا تجربتك مع اللعبة..." rows="3"></textarea>
+
+        <button class="primary-btn" id="submitReview" style="width:100%;">نشر رأيي 🚀</button>
+        <p class="review-login-note" id="reviewLoginNote" style="display:none;text-align:center;font-size:0.85rem;color:var(--text-muted);margin-top:8px;">
+          يجب <a href="#" id="reviewLoginLink" style="color:var(--primary);font-weight:600;">تسجيل الدخول</a> لإضافة رأيك
+        </p>
+      </div>
+    </div>
+
+    <div class="reviews-grid" id="reviewsGrid">
+      <div class="reviews-loading">جاري تحميل الآراء...</div>
+    </div>
+  </section>
+  <!-- ===== نهاية قسم آراء العملاء ===== -->
 
   <div class="modal-overlay hidden" id="gameModal">
     <div class="modal">
@@ -138,30 +175,23 @@
     <div class="modal">
       <button class="close-modal" data-close="loginModal">&times;</button>
       <h3>تسجيل الدخول</h3>
-      
       <form id="loginForm">
         <div class="form-group">
           <label for="loginEmail">رقم الجوال أو البريد الإلكتروني</label>
-          <input type="text" id="loginEmail" placeholder=" رقم الجوال أو البريد الإلكتروني" required>
+          <input type="text" id="loginEmail" placeholder="رقم الجوال أو البريد الإلكتروني" required>
         </div>
-
         <div class="form-group">
           <label for="loginPassword">كلمة المرور</label>
           <input type="password" id="loginPassword" placeholder="••••••••" required>
         </div>
-
         <div id="loginErrorMsg" class="error-text hidden"></div>
-
         <button type="submit" class="primary-btn" style="width: 100%; margin-top: 5px;">دخول</button>
       </form>
-
       <div class="auth-divider" style="text-align: center; margin: 15px 0; color: var(--text-muted);"><span>أو</span></div>
-      
       <button id="googleLogin" class="google-btn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border:1px solid #ddd; background:#fff; border-radius:var(--radius-md); cursor:pointer; font-family:inherit;">
         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" width="18">
         تسجيل الدخول بواسطة Google
       </button>
-
       <p class="auth-switch" style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: var(--text-muted);">
         ليس لديكِ حساب؟ <a href="#" id="openRegister" style="color: var(--primary); font-weight: 600; text-decoration: none;">إنشاء حساب جديد</a>
       </p>
@@ -172,33 +202,26 @@
     <div class="modal">
       <button class="close-modal" data-close="registerModal">&times;</button>
       <h3>إنشاء حساب جديد</h3>
-      
       <form id="registerForm">
         <div class="form-group">
           <label for="registerName">الاسم الكامل</label>
           <input type="text" id="registerName" placeholder="الاسم..." required style="direction: rtl; text-align: right;">
         </div>
-
         <div class="form-group">
           <label for="registerPhone">رقم الجوال الحقيقي</label>
           <input type="tel" id="registerPhone" placeholder="05xxxxxxxx" required maxlength="10">
         </div>
-
         <div class="form-group">
           <label for="registerEmail">البريد الإلكتروني (اختياري)</label>
           <input type="email" id="registerEmail" placeholder="name@example.com">
         </div>
-
         <div class="form-group">
           <label for="registerPassword">كلمة المرور</label>
           <input type="password" id="registerPassword" placeholder="••••••••" required>
         </div>
-
         <div id="registerErrorMsg" class="error-text hidden"></div>
-
         <button type="submit" class="primary-btn" style="width: 100%; margin-top: 5px;">تسجيل وتفعيل الحساب 🎉</button>
       </form>
-
       <p class="auth-switch" style="text-align: center; margin-top: 15px; font-size: 0.9rem; color: var(--text-muted);">
         لديكِ حساب بالفعل؟ <a href="#" id="openLogin" style="color: var(--primary); font-weight: 600; text-decoration: none;">تسجيل الدخول</a>
       </p>
@@ -211,7 +234,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
-
   <script src="firebase-config.js"></script>
   <script src="script.js"></script>
 </body>
