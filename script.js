@@ -314,7 +314,7 @@ if (checkoutToggle) {
   checkoutToggle.addEventListener("click", function() {
     if (!currentUser) { alert("الرجاء تسجيل الدخول أولاً لإتمام الطلب."); openModal(loginModal); return; }
     if (cart.length === 0) { alert("سلتك فارغة حالياً، يرجى إضافة لعبة أولاً."); return; }
-    window.location.href = "https://buy.stripe.com/test_4gMdR229ve1TcgDbuZcfK00;
+    window.location.href = "https://buy.stripe.com/test_4gMdR229ve1TcgDbuZcfK00";
   });
 }
 
