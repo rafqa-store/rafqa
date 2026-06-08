@@ -45,7 +45,7 @@ let currentUser = null;
 
 function mapCategory(cat) {
   switch (cat) {
-    case "eid": return "ألعاب العيد";
+    case "eid": return "ألعاب متنوعة";
     case "brain": return "ألعاب الذكاء";
     case "summer": return "ألعاب الذكاء الاصطناعي";
     case "edu": return "ألعاب تعليمية";
@@ -314,7 +314,7 @@ if (checkoutToggle) {
   checkoutToggle.addEventListener("click", function() {
     if (!currentUser) { alert("الرجاء تسجيل الدخول أولاً لإتمام الطلب."); openModal(loginModal); return; }
     if (cart.length === 0) { alert("سلتك فارغة حالياً، يرجى إضافة لعبة أولاً."); return; }
-    window.location.href = "https://buy.stripe.com/YOUR_REAL_STRIPE_LINK";
+    window.location.href = "https://buy.stripe.com/test_4gMdR229ve1TcgDbuZcfK00;
   });
 }
 
