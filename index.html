@@ -68,7 +68,7 @@
     <div class="category-grid">
       <button class="category-card" data-category="eid">
         <span class="cat-icon">🌙</span>
-        <span class="cat-name">ألعاب متنوعة</span>
+        <span class="cat-name">ألعاب العيد</span>
       </button>
       <button class="category-card" data-category="brain">
         <span class="cat-icon">🧠</span>
@@ -95,38 +95,49 @@
 
   <!-- ===== قسم آراء العملاء ===== -->
   <section class="reviews-section" id="reviewsSection">
+
     <div class="reviews-header">
       <h2>⭐ آراء عملائنا</h2>
-      <p class="reviews-subtitle">شاركنا تجربتك بعد الشراء</p>
+      <p class="reviews-subtitle">شاركنا تجربتك بعد الشراء وساعد الآخرين في الاختيار</p>
     </div>
 
-    <div class="review-form-wrapper" id="reviewFormWrapper">
-      <div class="review-form-card">
-        <h4>✍️ أضف رأيك</h4>
+    <div class="reviews-layout">
 
-        <div class="star-rating" id="starRating">
-          <span class="star" data-value="1">★</span>
-          <span class="star" data-value="2">★</span>
-          <span class="star" data-value="3">★</span>
-          <span class="star" data-value="4">★</span>
-          <span class="star" data-value="5">★</span>
+      <!-- نموذج إضافة رأي -->
+      <div class="review-form-wrapper" id="reviewFormWrapper">
+        <div class="review-form-card">
+          <p class="review-form-title">أضف تقييمك</p>
+
+          <div class="star-rating-wrapper">
+            <p class="star-rating-label">كيف تقيّم تجربتك؟</p>
+            <div class="star-rating" id="starRating">
+              <span class="star" data-value="1">★</span>
+              <span class="star" data-value="2">★</span>
+              <span class="star" data-value="3">★</span>
+              <span class="star" data-value="4">★</span>
+              <span class="star" data-value="5">★</span>
+            </div>
+          </div>
+
+          <select id="reviewGameSelect" class="review-input">
+            <option value="">🎮 اختر اللعبة التي اشتريتها</option>
+          </select>
+
+          <textarea id="reviewText" class="review-input" placeholder="شاركنا تجربتك مع اللعبة..." rows="4"></textarea>
+
+          <button class="review-submit-btn" id="submitReview">نشر تقييمي 🚀</button>
+
+          <p class="review-login-note" id="reviewLoginNote" style="display:none;">
+            يجب <a href="#" id="reviewLoginLink" style="color:var(--primary);font-weight:600;">تسجيل الدخول</a> لإضافة رأيك
+          </p>
         </div>
-
-        <select id="reviewGameSelect" class="review-input">
-          <option value="">اختر اللعبة التي اشتريتها</option>
-        </select>
-
-        <textarea id="reviewText" class="review-input" placeholder="شاركنا تجربتك مع اللعبة..." rows="3"></textarea>
-
-        <button class="primary-btn" id="submitReview" style="width:100%;">نشر رأيي 🚀</button>
-        <p class="review-login-note" id="reviewLoginNote" style="display:none;text-align:center;font-size:0.85rem;color:var(--text-muted);margin-top:8px;">
-          يجب <a href="#" id="reviewLoginLink" style="color:var(--primary);font-weight:600;">تسجيل الدخول</a> لإضافة رأيك
-        </p>
       </div>
-    </div>
 
-    <div class="reviews-grid" id="reviewsGrid">
-      <div class="reviews-loading">جاري تحميل الآراء...</div>
+      <!-- عرض الآراء -->
+      <div class="reviews-grid" id="reviewsGrid">
+        <div class="reviews-loading">جاري تحميل الآراء...</div>
+      </div>
+
     </div>
   </section>
   <!-- ===== نهاية قسم آراء العملاء ===== -->
