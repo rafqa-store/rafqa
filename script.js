@@ -45,7 +45,7 @@ let currentUser = null;
 
 function mapCategory(cat) {
   switch (cat) {
-    case "eid": return "ألعاب العيد";
+    case "eid": return "ألعاب متنوعة";
     case "brain": return "ألعاب الذكاء";
     case "summer": return "ألعاب الذكاء الاصطناعي";
     case "edu": return "ألعاب تعليمية";
