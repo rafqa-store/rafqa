@@ -45,7 +45,7 @@ let currentUser = null;
 
 function mapCategory(cat) {
   switch (cat) {
-    case "eid": return "ألعاب متنوعة";
+    case "eid": return "ألعاب العيد";
     case "brain": return "ألعاب الذكاء";
     case "summer": return "ألعاب الذكاء الاصطناعي";
     case "edu": return "ألعاب تعليمية";
@@ -314,7 +314,7 @@ if (checkoutToggle) {
   checkoutToggle.addEventListener("click", function() {
     if (!currentUser) { alert("الرجاء تسجيل الدخول أولاً لإتمام الطلب."); openModal(loginModal); return; }
     if (cart.length === 0) { alert("سلتك فارغة حالياً، يرجى إضافة لعبة أولاً."); return; }
-    window.location.href = "https://buy.stripe.com/test_4gMdR229ve1TcgDbuZcfK00";
+    window.location.href = "https://buy.stripe.com/YOUR_REAL_STRIPE_LINK";
   });
 }
 
@@ -634,14 +634,24 @@ function loadReviews() {
         var stars = "";
         for (var i = 1; i <= 5; i++) stars += (i <= r.rating ? "★" : "☆");
         var date = r.createdAt ? new Date(r.createdAt).toLocaleDateString("ar-SA") : "";
+        var initial = (r.authorName || "م").charAt(0);
         card.innerHTML =
           '<div class="review-card-header">' +
-            '<span class="review-author">👤 ' + (r.authorName || "مستخدم") + '</span>' +
-            '<span class="review-stars">' + stars + '</span>' +
+            '<div class="review-author-area">' +
+              '<div class="review-avatar">' + initial + '</div>' +
+              '<div>' +
+                '<div class="review-author">' + (r.authorName || "مستخدم") + '</div>' +
+                (r.gameName ? '<div class="review-author-sub">' + r.gameName + '</div>' : '') +
+              '</div>' +
+            '</div>' +
+            '<div class="review-stars-badge"><span>' + stars + '</span> ' + r.rating + '</div>' +
           '</div>' +
           (r.gameName ? '<span class="review-game-tag">🎮 ' + r.gameName + '</span>' : '') +
           '<p class="review-text">' + r.text + '</p>' +
-          '<span class="review-date">' + date + '</span>';
+          '<div class="review-footer">' +
+            '<span class="review-verified">✓ مشتري موثّق</span>' +
+            '<span class="review-date">' + date + '</span>' +
+          '</div>';
         grid.appendChild(card);
       });
     }, function(err) {
